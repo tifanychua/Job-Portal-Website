@@ -1,15 +1,21 @@
+from pathlib import Path
+
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
-import os
+from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
+
+from job_portal_web.backend.routes.employer import router as employer_router
 
 app = FastAPI()
 
-UI_DIR = "/home/user/Job Portal Web/src/job_portal_web/ui"
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="agileAsg"
+)
 
-@app.get("/")
-async def home():
-    return FileResponse(os.path.join(UI_DIR, "home.html"))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-@app.get("/login")
-async def login_page():
-    return FileResponse(os.path.join(UI_DIR, "login.html"))
+app.mount("/css", StaticFiles(directory=str(BASE_DIR / "css")), name="css")
+app.mount("/images", StaticFiles(directory=str(BASE_DIR / "images")), name="images")
+
+app.include_router(employer_router)

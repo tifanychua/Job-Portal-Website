@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/employerHeader.css">
+    <link rel="stylesheet" href="/css/postJob.css">
+</head>
+<body>
+    {% include "employerHeader.html" %}
+    <main class="main-content">
+
+        <div class="page-header">
+
+            <div>
+                <h1>All Posted Jobs</h1>
+                <p>View and manage all the jobs you have posted.</p>
+            </div>
+
+            <a href="/publish-job" class="post-btn">
+                <i class="fa-solid fa-plus"></i>
+                Post a New Job
+            </a>
+
+        </div>
+
+        <!-- Tabs -->
+        <div class="job-toolbar">
+
+            <div class="job-tabs">
+                <a href="#" class="active">All Jobs (12)</a>
+                <a href="#">Active (6)</a>
+                <a href="#">Draft (2)</a>
+                <a href="#">Closed (4)</a>
+                <a href="#">Expired (0)</a>
+            </div>
+
+            <div class="toolbar">
+
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Search jobs...">
+                </div>
+
+                <button class="filter-btn">
+                    <i class="fa-solid fa-filter"></i>
+                    Filter
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Job table comes here -->
+
+    </main>
+
+</body>
+</html>

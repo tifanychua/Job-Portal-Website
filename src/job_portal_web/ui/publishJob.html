@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a New Job</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/employerHeader.css">
+    <link rel="stylesheet" href="/css/publishJob.css">
+</head>
+<body>
+    {% include "employerHeader.html" %}
+
+    <form action="/review-job" method="post">
+
+    <main class="main-content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+
+            <div>
+                <h1>Post a New Job</h1>
+                <p>
+                    Fill in the job details below to attract the right candidates.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- ===========================
+                Job Information
+        ============================ -->
+
+        <div class="job-card">
+
+            <div class="card-title">
+
+                <img src="/images/number-1.png" alt="Step 1">
+
+                <h2>Job Information</h2>
+
+            </div>
+
+            <div class="form-grid">
+
+                <!-- Job Title -->
+                <div class="form-group full-width">
+
+                    <label>
+                        Job Title <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="job_title"
+                        placeholder="e.g. Senior Software Engineer">
+
+                </div>
+
+                <!-- Job Category -->
+                <div class="form-group">
+
+                    <label>
+                        Job Category <span>*</span>
+                    </label>
+
+                    <select name="category" id="category">
+
+                        <option selected disabled>
+                            Select job category
+                        </option>
+
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Software Development">Software Development</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Accounting">Accounting</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Human Resources">Human Resources</option>
+                        <option value="Customer Service">Customer Service</option>
+                        <option value="Healthcare">Healthcare</option>
+                        <option value="Education">Education</option>
+                        <option value="Manufacturing">Manufacturing</option>
+                        <option>Others</option>
+
+                    </select>
+
+                </div>
+
+                <!-- Employment Type -->
+                <div class="form-group">
+
+                    <label>
+                        Employment Type <span>*</span>
+                    </label>
+
+                    <select name="employment_type" id="employment_type">
+
+                        <option selected disabled>
+                            Select employment type
+                        </option>
+
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Internship">Internship</option>
+                        <option value="Temporary">Temporary</option>
+                        <option value="Freelance">Freelance</option>
+
+                    </select>
+
+                </div>
+
+                <!-- Position -->
+                <div class="form-group">
+
+                    <label>
+                        Job Position / Level <span>*</span>
+                    </label>
+
+                    <select id="position" name="position">
+
+                        <option selected disabled>
+                            Select position level
+                        </option>
+
+                        <option value="Internship">Internship</option>
+                        <option value="Entry Level">Entry Level</option>
+                        <option value="Junior Executive">Junior Executive</option>
+                        <option value="Senior Executive">Senior Executive</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Senior Manager">Senior Manager</option>
+                        <option value="Director">Director</option>
+
+                    </select>
+
+                </div>
+
+                <!-- Vacancies -->
+                <div class="form-group">
+
+                    <label>
+                        Number of Vacancies <span>*</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        name="vacancies"
+                        value="1"
+                        min="1">
+
+                </div>
+
+                <!-- Location -->
+                <div class="form-group full-width">
+
+                    <label>
+                        Work Location <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="location"
+                        placeholder="e.g. Kuala Lumpur, Malaysia">
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===========================
+                Job Details
+        =========================== -->
+
+        <div class="job-card">
+
+            <div class="card-title">
+
+                <img src="/images/number-2.png" alt="Step 2">
+
+                <h2>Job Details</h2>
+
+            </div>
+
+            <!-- Job Description -->
+            <div class="form-group">
+
+                <label>
+                    Job Description <span>*</span>
+                </label>
+
+                <textarea
+                    rows="7"
+                    name="job_desc"
+                    placeholder="Provide a detailed description of the job role, daily tasks, company background, and what candidates can expect."></textarea>
+
+            </div>
+
+            <div class="details-grid">
+
+                <!-- Responsibilities -->
+                <div class="form-group">
+
+                    <label>
+                        Job Responsibilities <span>*</span>
+                    </label>
+
+                    <textarea
+                        rows="6"
+                        name="job_responsibility"
+                        placeholder="Example:
+                                • Develop and maintain web applications
+                                • Collaborate with designers and project managers
+                                • Write clean and maintainable code"></textarea>
+
+                </div>
+
+                <!-- Requirements -->
+                <div class="form-group">
+
+                    <label>
+                        Job Requirements <span>*</span>
+                    </label>
+
+                    <textarea
+                        rows="6"
+                        name="job_req"
+                        placeholder="Example:
+                        • Bachelor's Degree in Computer Science
+                        • 2+ years of experience
+                        • Knowledge of Python, HTML, CSS and SQL"></textarea>
+
+                </div>
+
+            </div>
+
+            <!-- Additional Information -->
+            <div class="form-group">
+
+                <label style="margin-top:28px;">
+                    Additional Information
+                </label>
+
+                <textarea
+                    rows="5"
+                    name="additional_info"
+                    placeholder="Optional information such as working hours, company culture, dress code, probation period, travel requirements or any additional notes."></textarea>
+
+            </div>
+
+        </div>
+
+        <!-- ===========================
+                Salary & Benefits
+        =========================== -->
+
+        <div class="job-card">
+
+            <div class="card-title">
+
+                <img src="/images/number-3.png" alt="Step 3">
+
+                <h2>Salary & Benefits</h2>
+
+            </div>
+
+            <!-- Salary Type -->
+
+            <div class="form-group">
+
+                <label>
+                    Salary Type <span>*</span>
+                </label>
+
+                <div class="salary-type">
+
+                    <label class="radio-item">
+                        <input type="radio"
+                            name="salaryType"
+                            value="fixed"
+                            checked>
+                        Fixed
+                    </label>
+
+                    <label class="radio-item">
+                        <input type="radio"
+                            name="salaryType"
+                            value="range">
+                        Range
+                    </label>
+
+                    <label class="radio-item">
+                        <input type="radio"
+                            name="salaryType"
+                            value="negotiable">
+                        Negotiable
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- Fixed Salary -->
+
+            <div id="fixedSalary" class="salary-section">
+
+                <div class="form-group">
+
+                    <label>
+                        Salary (RM) <span>*</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        name="salary"
+                        placeholder="e.g. 4500">
+
+                </div>
+
+            </div>
+
+            <!-- Salary Range -->
+
+            <div id="rangeSalary" name="salary"
+                class="salary-section"
+                style="display:none;">
+
+                <div class="salary-grid">
+
+                    <div class="form-group">
+
+                        <label>
+                            Minimum Salary (RM)
+                        </label>
+
+                        <input
+                            type="number"
+                            name="minSalary"
+                            placeholder="Minimum">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Maximum Salary (RM)
+                        </label>
+
+                        <input
+                            type="number"
+                            name="maxSalary"
+                            placeholder="Maximum">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Benefits -->
+
+            <div class="form-group benefit-section">
+
+                <label>
+                    Benefits
+                </label>
+
+                <div class="benefits-grid">
+
+                    <label><input type="checkbox" name="benefits" value="epf"> EPF</label>
+                    <label><input type="checkbox" name="benefits" value="SOCSO"> SOCSO</label>
+                    <label><input type="checkbox" name="benefits" value="EIS"> EIS</label>
+                    <label><input type="checkbox" name="benefits" value="Annual Leave"> Annual Leave</label>
+                    <label><input type="checkbox" name="benefits" value="Medical Leave"> Medical Leave</label>
+                    <label><input type="checkbox" name="benefits" value="Medical Insurance"> Medical Insurance</label>
+                    <label><input type="checkbox" name="benefits" value="Dental Coverage"> Dental Coverage</label>
+                    <label><input type="checkbox" name="benefits" value="Performance Bonus"> Performance Bonus</label>
+                    <label><input type="checkbox" name="benefits" value="Annual Bonus"> Annual Bonus</label>
+                    <label><input type="checkbox" name="benefits" value="Flexible Working Hours"> Flexible Working Hours</label>
+                    <label><input type="checkbox" name="benefits" value="Work From Home"> Work From Home</label>
+                    <label><input type="checkbox" name="benefits" value="Hybrid Working"> Hybrid Working</label>
+                    <label><input type="checkbox" name="benefits" value="Training Provided"> Training Provided</label>
+                    <label><input type="checkbox" name="benefits" value="Career Development"> Career Development</label>
+                    <label><input type="checkbox" name="benefits" value="Parking Allowance"> Parking Allowance</label>
+                    <label><input type="checkbox" name="benefits" value="Meal Allowance"> Meal Allowance</label>
+                    <label><input type="checkbox" name="benefits" value="Transport Allowance"> Transport Allowance</label>
+
+                    <div class="other-benefit">
+
+                        <label class="other-check">
+                            <input type="checkbox" id="otherBenefit">
+                            Other
+                        </label>
+
+                        <input
+                            type="text"
+                            id="otherBenefitInput"
+                            name="other_benefit"
+                            class="other-input"
+                            placeholder="Please specify..."
+                            disabled>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===========================
+                Bottom Buttons
+        =========================== -->
+
+        <div class="action-buttons">
+
+            <a href="/manage-jobs" class="cancel-btn">
+                <i class="fa-solid fa-xmark"></i>
+                Cancel
+            </a>
+
+            <button type="submit" class="next-btn">
+                Next: Review & Publish
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+        </div>
+
+    </main>
+    </form>
+    
+
+    <script>
+
+        const salaryType = document.querySelectorAll('input[name="salaryType"]');
+
+        const fixedSalary = document.getElementById("fixedSalary");
+
+        const rangeSalary = document.getElementById("rangeSalary");
+
+        salaryType.forEach(radio => {
+
+            radio.addEventListener("change", function(){
+
+                if(this.value === "fixed"){
+
+                    fixedSalary.style.display = "block";
+                    rangeSalary.style.display = "none";
+
+                }
+
+                else if(this.value === "range"){
+
+                    fixedSalary.style.display = "none";
+                    rangeSalary.style.display = "block";
+
+                }
+
+                else{
+
+                    fixedSalary.style.display = "none";
+                    rangeSalary.style.display = "none";
+
+                }
+
+            });
+
+        });
+
+        const otherBenefit = document.getElementById("otherBenefit");
+        const otherInput = document.getElementById("otherBenefitInput");
+
+        console.log(otherBenefit);
+        console.log(otherInput);
+
+        otherBenefit.addEventListener("change", function () {
+
+            otherInput.disabled = !this.checked;
+
+            if (!this.checked) {
+                otherInput.value = "";
+            }
+
+        });
+
+
+        </script>
+</body>
+
+</html>

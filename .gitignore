@@ -5,3 +5,9 @@ __pycache__/
 coverage.xml
 dist/
 .cache/
+
+# VS Code
+.vscode/
+
+# Firebase Service Account
+src/job_portal_web/backend/firebase_key.json
