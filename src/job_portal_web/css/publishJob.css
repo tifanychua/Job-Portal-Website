@@ -507,3 +507,51 @@
     font-size:15px;
 
 }
+
+/* Invalid required fields */
+
+.form-group input.input-error,
+.form-group select.input-error,
+.form-group textarea.input-error {
+    border: 2px solid #dc2626 !important;
+    background-color: #fffafa;
+}
+
+.error-message {
+    display: block;
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    margin-top: 50px;
+}
+
+.draft-btn {
+    width:200px;
+    height:50px;
+
+    border: 1px solid #2563eb;
+    border-radius:10px;
+
+    background: #ffffff;
+    color: #2563eb;
+
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    transition:.2s;
+}
+
+.draft-btn:hover {
+    background: #eff6ff;
+}

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>JobConnect - Scheduled Interviews</title>
+
+<link rel="stylesheet" href="/static/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ================= HEADER ================= -->
+
+
+<header>
+
+
+<div class="logo">
+
+<i class="fa-solid fa-location-dot"></i>
+
+<span>
+JobConnect
+</span>
+
+</div>
+
+
+
+<nav>
+
+<a href="#">
+Home
+</a>
+
+<a href="#">
+Jobs
+</a>
+
+<a href="#">
+Companies
+</a>
+
+
+<a href="/schedule_list">
+Interviews
+</a>
+
+
+<a href="#">
+Career Advice
+</a>
+
+
+<a href="#">
+About Us
+</a>
+
+
+</nav>
+
+
+
+
+<div class="nav-right">
+
+
+<i class="fa-solid fa-globe"></i>
+
+<span>
+EN
+</span>
+
+
+<i class="fa-regular fa-heart"></i>
+
+
+
+<div class="notification">
+
+<i class="fa-regular fa-bell"></i>
+
+<span class="badge">
+3
+</span>
+
+</div>
+
+
+
+
+
+<div class="profile">
+
+
+<img src="/static/images/avatar.jpg">
+
+
+<div>
+
+<h4>
+Pai Wen
+</h4>
+
+<small>
+Employer
+</small>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+
+
+
+
+<div class="container" id="schedule-list">
+
+
+
+
+
+
+
+<aside>
+
+
+<h5>
+JOB EMPLOYER
+</h5>
+
+
+
+<ul>
+
+
+<li>
+
+<i class="fa-solid fa-table-columns"></i>
+
+Dashboard
+
+</li>
+
+
+
+<li>
+
+<i class="fa-solid fa-briefcase"></i>
+
+My Jobs
+
+</li>
+
+
+
+<li>
+
+<i class="fa-solid fa-users"></i>
+
+Applicants
+
+</li>
+
+
+
+
+<li class="active">
+
+<a href="/schedule_list">
+
+<i class="fa-solid fa-calendar-days"></i>
+
+Interviews
+
+</a>
+
+</li>
+
+
+
+
+<li>
+
+<i class="fa-solid fa-building"></i>
+
+Company Profile
+
+</li>
+
+
+
+
+<li>
+
+<i class="fa-solid fa-gear"></i>
+
+Settings
+
+</li>
+
+
+
+
+<li>
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+Logout
+
+</li>
+
+
+</ul>
+
+
+
+
+
+
+<div class="progress-card">
+
+
+<h4>
+Hiring Progress
+</h4>
+
+
+
+<div class="circle">
+
+80%
+
+</div>
+
+
+
+
+<p>
+12 / 15 positions filled
+</p>
+
+
+
+<a href="#">
+View Hiring Report →
+</a>
+
+
+
+</div>
+
+
+</aside>
+
+
+
+
+
+
+
+
+<!-- ================= MAIN ================= -->
+
+
+<main>
+
+
+
+<div class="page-title">
+
+
+<h1>
+Scheduled Interviews
+</h1>
+
+
+<p>
+View and manage all upcoming candidate interviews.
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<section class="filter-card interview-control-card">
+
+
+<!-- Interview Summary -->
+
+<div class="summary-section">
+
+
+<h3>
+Interview Summary
+</h3>
+
+
+<div class="summary-grid">
+
+
+<div class="summary-box">
+
+<i class="fa-solid fa-calendar-check"></i>
+
+<div>
+
+<p>
+Upcoming Interviews
+</p>
+
+<strong id="totalInterview">
+0 Scheduled
+</strong>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="summary-box">
+
+
+<i class="fa-solid fa-clock"></i>
+
+
+<div>
+
+<p>
+Next Interview
+</p>
+
+<strong id="nextInterview">
+No Interview
+</strong>
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="summary-box">
+
+
+<i class="fa-solid fa-users"></i>
+
+
+<div>
+
+<p>
+Total Candidates
+</p>
+
+
+<strong id="totalCandidate">
+0 Candidates
+</strong>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<hr>
+
+
+
+<!-- Search and Filter -->
+
+
+<div class="filter-section">
+
+
+<div>
+
+
+<label>
+Search Candidate
+</label>
+
+
+<input 
+type="text"
+placeholder="Search candidate name...">
+
+
+</div>
+
+
+
+
+
+<div>
+
+
+<label>
+Interview Status
+</label>
+
+
+<select>
+
+
+<option>
+All Status
+</option>
+
+
+<option>
+Scheduled
+</option>
+
+
+<option>
+Completed
+</option>
+
+
+<option>
+Cancelled
+</option>
+
+
+</select>
+
+
+</div>
+
+
+</div>
+
+
+
+</section>
+
+<section class="table-card">
+<h3>
+All Scheduled Interviews
+</h3>
+
+
+<table>
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+Candidate
+</th>
+
+
+<th>
+Position
+</th>
+
+
+<th>
+Date
+</th>
+
+
+<th>
+Time
+</th>
+
+
+<th>
+Duration
+</th>
+
+
+<th>
+Interviewer
+</th>
+
+
+<th>
+Status
+</th>
+
+
+<th>
+Action
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody id="interviewTable">
+
+</tbody>
+
+
+
+</table>
+
+
+
+</section>
+
+
+
+</main>
+
+<footer>
+
+
+About Us &nbsp;&nbsp;
+
+Privacy Policy &nbsp;&nbsp;
+
+Terms of Use &nbsp;&nbsp;
+
+Help Center
+
+
+<br><br>
+
+
+© 2026 JobConnect
+
+
+</footer>
+
+
+<script>
+
+fetch("/api/interviews")
+
+.then(response => response.json())
+
+.then(data => {
+
+
+let table = document.getElementById(
+"interviewTable"
+);
+
+
+
+data.forEach(interview => {
+
+
+
+let row = `
+
+<tr>
+
+
+<td>
+
+<div class="candidate-mini">
+
+
+<img src="/static/images/avatar.jpg">
+
+
+<div>
+
+<strong>
+${interview.candidateName}
+</strong>
+
+
+<p>
+${interview.position}
+</p>
+
+
+</div>
+
+
+</div>
+
+</td>
+
+
+
+
+
+<td>
+${interview.position}
+</td>
+
+
+
+<td>
+${interview.date}
+</td>
+
+
+
+<td>
+${interview.time}
+</td>
+
+
+
+<td>
+${interview.duration}
+</td>
+
+
+
+<td>
+${interview.interviewer}
+</td>
+
+
+
+
+<td>
+
+<span class="scheduled">
+Scheduled
+</span>
+
+</td>
+
+
+
+
+<td>
+
+<button>
+Reschedule
+</button>
+
+</td>
+
+
+
+</tr>
+
+`;
+
+
+
+table.innerHTML += row;
+
+
+
+});
+
+
+
+});
+
+fetch("/api/interviews")
+
+.then(response=>response.json())
+
+.then(data=>{
+
+
+document.getElementById(
+"totalInterview"
+).innerHTML =
+data.length + " Scheduled";
+
+
+
+document.getElementById(
+"totalCandidate"
+).innerHTML =
+data.length + " Candidates";
+
+
+
+if(data.length > 0){
+
+    document.getElementById(
+        "nextInterview"
+    ).innerHTML =
+        data[0].candidateName 
+        + "<br>"
+        + data[0].date
+        + " "
+        + data[0].time;
+
+}
+
+
+});
+
+
+</script>
+
+</body>
+
+
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add a New Job</title>
+    <title>Edit The Job</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -13,7 +13,7 @@
 <body>
     {% include "employerHeader.html" %}
 
-    <form action="/review-job" method="post" id="jobForm" novalidate>
+<form action="/review-edit-job/{{ job.job_id }}" method="post" id="jobForm" novalidate>
 
     <main class="main-content">
 
@@ -21,7 +21,7 @@
         <div class="page-header">
 
             <div>
-                <h1>Post a New Job</h1>
+                <h1>Edit the Job</h1>
                 <p>
                     Fill in the job details below to attract the right candidates.
                 </p>
@@ -504,17 +504,28 @@
                 Cancel
             </a>
 
+            {% if job.status | lower == "draft" %}
+
             <button type="submit"
                     class="draft-btn"
                     name="action"
                     value="draft">
+
                 <i class="fa-regular fa-floppy-disk"></i>
                 Save as Draft
+
             </button>
 
-            <button type="submit" class="next-btn">
+            {% endif %}
+
+            <button type="submit"
+                    class="next-btn"
+                    name="action"
+                    value="review">
+
                 Next: Review & Publish
                 <i class="fa-solid fa-arrow-right"></i>
+
             </button>
 
         </div>
@@ -649,25 +660,25 @@
 
             requiredFields.forEach(field => {
 
-                // Remove previous red border
                 field.classList.remove("input-error");
 
-                // Check if empty
+                // Ignore hidden or disabled fields
+                if (field.disabled || field.offsetParent === null) {
+                    return;
+                }
+
+                // Check empty value
                 if (field.value.trim() === "") {
 
                     field.classList.add("input-error");
-
                     isValid = false;
 
                     if (!firstInvalidField) {
                         firstInvalidField = field;
                     }
                 }
-
             });
 
-
-            // Stop going to review page if any required field is empty
             if (!isValid) {
 
                 event.preventDefault();
@@ -679,7 +690,6 @@
 
                 firstInvalidField.focus();
             }
-
         });
 
         const jobTitle = document.getElementById("jobTitle");

@@ -39,25 +39,39 @@
 
         <div class="header-buttons">
 
-            <a href="/publish-job" class="back-btn">
+            {% if is_edit %}
 
-                <i class="fa-solid fa-arrow-left"></i>
+                <a href="/edit-job/{{ job.job_id }}" class="back-btn">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back
+                </a>
 
-                Back
+                <form action="/update-job-confirm/{{ job.job_id }}" method="post">
 
-            </a>
+                    <button type="submit" class="publish-btn">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Confirm Update
+                    </button>
 
-            <form action="/publish-job-confirm" method="post">
+                </form>
 
-                <button class="publish-btn">
+            {% else %}
 
-                    <i class="fa-solid fa-paper-plane"></i>
+                <a href="/publish-job" class="back-btn">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back
+                </a>
 
-                    Publish Job
+                <form action="/publish-job-confirm" method="post">
 
-                </button>
+                    <button type="submit" class="publish-btn">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Publish Job
+                    </button>
 
-            </form>
+                </form>
+
+            {% endif %}
 
         </div>
 
@@ -80,14 +94,6 @@
                 <h2>Job Information</h2>
 
             </div>
-
-            <a href="/publish-job" class="edit-btn">
-
-                <i class="fa-solid fa-pen"></i>
-
-                Edit
-
-            </a>
 
         </div>
 
@@ -163,14 +169,6 @@
 
             </div>
 
-            <a href="/publish-job" class="edit-btn">
-
-                <i class="fa-solid fa-pen"></i>
-
-                Edit
-
-            </a>
-
         </div>
 
         <div class="preview-section">
@@ -240,14 +238,6 @@
                 <h2>Salary & Benefits</h2>
 
             </div>
-
-            <a href="/publish-job" class="edit-btn">
-
-                <i class="fa-solid fa-pen"></i>
-
-                Edit
-
-            </a>
 
         </div>
 
