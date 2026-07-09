@@ -442,7 +442,6 @@ main{
 .form-card,
 .card{
 
-
     background:white;
 
     border-radius:18px;
@@ -453,19 +452,38 @@ main{
 
     margin-bottom:25px;
 
+    position:relative; /* add this */
+
+}
+
+.candidate-card > a{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    margin-top:20px;
+
+    text-decoration:none;
 
 }
 
 
+.candidate-card .primary{
 
+    width:auto;
 
-
-
+}
 
 /* ==========================
 Candidate Card
 ========================== */
 
+.candidate-card a{
+
+    text-decoration:none;
+
+}
 
 .candidate-top{
 
