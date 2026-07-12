@@ -418,8 +418,7 @@ Interviewer
 
 
 
-<div class="full">
-
+<div class="full" id="meetingLinkContainer">
 
 <label>
 Meeting Link
@@ -469,12 +468,6 @@ placeholder="Add interview instructions...">
 
 
 <div id="message"></div>
-
-
-
-
-
-
 
 <div class="buttons">
 
@@ -688,6 +681,9 @@ Hiring Decision
 
 <script>
 
+window.onload = function(){
+    toggleMeetingLink();
+};
 
 let candidateData = {};
 
@@ -982,40 +978,35 @@ function showSuccess(messageText){
 
 function toggleMeetingLink(){
 
-
-let type =
-document.querySelector(
-'input[name="type"]:checked'
-).value;
+    let type = document.querySelector(
+        'input[name="type"]:checked'
+    ).value;
 
 
+    let container = document.getElementById(
+        "meetingLinkContainer"
+    );
 
-let link =
-document.getElementById("meetingLink");
-
-
-
-
-if(type === "physical"){
-
-
-link.value="";
+    let link = document.getElementById(
+        "meetingLink"
+    );
 
 
-link.disabled=true;
+    if(type === "physical"){
 
+        container.style.display = "none";
 
-}
+        link.value = "";
+        link.disabled = true;
 
-else{
+    }
+    else{
 
+        container.style.display = "block";
 
-link.disabled=false;
+        link.disabled = false;
 
-
-}
-
-
+    }
 
 }
 
