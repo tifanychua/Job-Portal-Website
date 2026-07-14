@@ -1,71 +1,109 @@
 <header class="topbar">
 
-        <!-- Left -->
-        <div class="topbar-left">
-            <img src="/images/companyLogo.png" class="logo" alt="Company Logo">
-        </div>
+    <!-- Left -->
+    <div class="topbar-left">
+        <img src="/images/companyLogo.png" class="logo" alt="Company Logo">
+    </div>
 
-        <!-- Right -->
-        <div class="topbar-right">
-            <button class="icon-btn notification">
-                <i class="fa-regular fa-bell"></i>
-                <span class="badge">3</span>
-            </button>
+    <!-- Right -->
+    <div class="topbar-right">
 
-            <div class="profile">
-                <img src="/images/user.png" alt="User">
-                
-                <span class="company-name">
-                    ABC Tech Solutions
-                </span>
-            </div>
-        </div>
-    </header>
+        <button class="icon-btn notification">
+            <i class="fa-regular fa-bell"></i>
+            <span class="badge">3</span>
+        </button>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
+        <div class="profile">
+            <img src="/images/user.png" alt="User">
 
-        <div class="sidebar-title">
-            EMPLOYER
-        </div>
-
-        <ul class="sidebar-menu">
-
-            <li>
-                <a href="/company-profile">
-                    <i class="fa-regular fa-user"></i>
-                    <span>Company Profile</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="/manage-jobs" class="active">
-                    <i class="fa-regular fa-folder-open"></i>
-                    <span>Manage Jobs</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="/messages">
-                    <i class="fa-regular fa-envelope"></i>
-                    <span>Messages</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="/subscription">
-                    <i class="fa-regular fa-credit-card"></i>
-                    <span>Subscription</span>
-                </a>
-            </li>
-
-        </ul>
-
-        <div class="sidebar-bottom">
-            <a href="/logout">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                <span>Log Out</span>
-            </a>
+            <span class="company-name">
+                ABC Tech Solutions
+            </span>
         </div>
 
     </div>
+
+</header>
+
+
+<!-- Sidebar -->
+<div class="sidebar">
+
+    <div class="sidebar-title">
+        EMPLOYER
+    </div>
+
+    <ul class="sidebar-menu">
+
+        <!-- Company Profile -->
+        <li>
+            <a href="/company-profile"
+               class="{% if request.url.path == '/company-profile' %}active{% endif %}">
+
+                <i class="fa-regular fa-user"></i>
+                <span>Company Profile</span>
+
+            </a>
+        </li>
+
+
+        <!-- Manage Jobs -->
+        <li>
+            <a href="/manage-jobs"
+               class="{% if request.url.path == '/manage-jobs' %}active{% endif %}">
+
+                <i class="fa-regular fa-folder-open"></i>
+                <span>Manage Jobs</span>
+
+            </a>
+        </li>
+
+
+        <!-- Applications -->
+        <li>
+            <a href="/applications"
+            class="{% if request.url.path == '/applications' %}active{% endif %}">
+
+                <i class="fa-regular fa-file-lines"></i>
+                <span>Applications</span>
+
+            </a>
+        </li>
+
+
+        <!-- Messages -->
+        <li>
+            <a href="/messages"
+               class="{% if request.url.path == '/messages' %}active{% endif %}">
+
+                <i class="fa-regular fa-envelope"></i>
+                <span>Messages</span>
+
+            </a>
+        </li>
+
+
+        <!-- Subscription -->
+        <li>
+            <a href="/subscription"
+               class="{% if request.url.path == '/subscription' %}active{% endif %}">
+
+                <i class="fa-regular fa-credit-card"></i>
+                <span>Subscription</span>
+
+            </a>
+        </li>
+
+    </ul>
+
+
+    <div class="sidebar-bottom">
+
+        <a href="/logout">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Log Out</span>
+        </a>
+
+    </div>
+
+</div>

@@ -499,10 +499,14 @@
 
         <div class="action-buttons">
 
-            <a href="/manage-jobs" class="cancel-btn">
-                <i class="fa-solid fa-xmark"></i>
-                Cancel
-            </a>
+            <a href="/manage-jobs"
+                class="cancel-btn"
+                onclick="return confirm('Are you sure you want to cancel editing this job? Any unsaved changes will be lost.')">
+
+                    <i class="fa-solid fa-xmark"></i>
+                    Cancel
+
+                </a>
 
             {% if job.status | lower == "draft" %}
 
@@ -700,6 +704,22 @@
                 this.value = this.value.replace(/[^A-Za-z\s\-\/()]/g, "");
 
             });
+
+            
+        const draftButton = document.querySelector('.draft-btn');
+
+        if (draftButton) {
+            draftButton.addEventListener("click", function (event) {
+
+                const confirmed = confirm(
+                    'Are you sure you want to save this job posting as a draft? You can edit and publish it later.'
+                );
+
+                if (!confirmed) {
+                    event.preventDefault();
+                }
+            });
+        }
     </script>
 </body>
 

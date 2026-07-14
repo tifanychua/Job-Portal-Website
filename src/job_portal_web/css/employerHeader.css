@@ -94,21 +94,21 @@
     color:#222;
 }
 
-.sidebar{
-    position:fixed;
-    top:85px;
-    left:0;
+.sidebar {
+    position: fixed;
+    top: 65px;
+    left: 0;
 
-    width:180px;
-    height:calc(100vh - 85px);
+    width: 180px;
+    height: calc(100vh - 65px);
 
-    background:#fff;
-    border-right:1px solid #ececec;
+    background: #fff;
+    border-right: 1px solid #ececec;
 
-    padding:18px 12px;
+    padding: 18px 12px;
 
-    display:flex;
-    flex-direction:column;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-title{

@@ -48,9 +48,13 @@
 
                 <form action="/update-job-confirm/{{ job.job_id }}" method="post">
 
-                    <button type="submit" class="publish-btn">
+                    <button type="submit"
+                            class="publish-btn"
+                            onclick="return confirm('Are you sure you want to update this job posting?')">
+
                         <i class="fa-solid fa-paper-plane"></i>
                         Confirm Update
+
                     </button>
 
                 </form>
@@ -64,9 +68,13 @@
 
                 <form action="/publish-job-confirm" method="post">
 
-                    <button type="submit" class="publish-btn">
+                    <button type="submit"
+                            class="publish-btn"
+                            onclick="return confirm('Are you sure you want to publish this job posting? Once published, the job will be visible to job seekers.')">
+
                         <i class="fa-solid fa-paper-plane"></i>
                         Publish Job
+
                     </button>
 
                 </form>

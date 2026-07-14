@@ -34,14 +34,12 @@ async def publish_job_confirm(request: Request):
             status_code=303
         )
 
-    # Temporary fixed company ID
     company_id = "C000001"
 
-    # Let Firestore automatically generate the document ID
+    # Let Firestore automatically generate document ID
     doc_ref = db.collection("job_list").document()
 
     # Additional fields
-    job["job_id"] = doc_ref.id
     job["company_id"] = company_id
     job["status"] = "Active"
     job["created_at"] = firestore.SERVER_TIMESTAMP
@@ -50,7 +48,7 @@ async def publish_job_confirm(request: Request):
     # Save to Firestore
     doc_ref.set(job)
 
-    # Remove temporary session
+    # Clear session
     request.session.pop("job", None)
 
     return RedirectResponse(
@@ -61,7 +59,6 @@ async def publish_job_confirm(request: Request):
 @router.get("/manage-jobs", response_class=HTMLResponse)
 async def manage_jobs(request: Request):
 
-    # Temporary fixed company ID
     company_id = "C000001"
 
     job_docs = (
@@ -73,9 +70,13 @@ async def manage_jobs(request: Request):
     jobs = []
 
     for doc in job_docs:
+
         job_data = doc.to_dict()
 
-        # Only display jobs that are not deleted
+        # Get Firestore document ID for HTML usage
+        job_data["job_id"] = doc.id
+
+        # Do not display deleted jobs
         if job_data.get("status", "").lower() != "deleted":
             jobs.append(job_data)
 
@@ -189,7 +190,6 @@ async def review_job(
 
         doc_ref = db.collection("job_list").document()
 
-        job["job_id"] = doc_ref.id
         job["company_id"] = company_id
         job["status"] = "Draft"
         job["created_at"] = firestore.SERVER_TIMESTAMP
@@ -204,13 +204,14 @@ async def review_job(
             status_code=303
         )
 
-    # Otherwise, go to review page
+    # If not draft, show the review page
     return templates.TemplateResponse(
         request=request,
         name="reviewJob.html",
         context={
             "request": request,
-            "job": request.session["job"]
+            "job": request.session["job"],
+            "is_edit": False
         }
     )
 
@@ -239,50 +240,20 @@ async def review_page(request: Request):
 
     job = request.session.get("job")
 
-    return templates.TemplateResponse(
-        request=request,
-        name="reviewJob.html",
-        context={
-            "request": request,
-            "job": job
-        }
-    )
-
-@router.post("/publish-job-confirm")
-async def publish_job_confirm(request: Request):
-
-    job = request.session.get("job")
-
     if not job:
         return RedirectResponse(
             url="/publish-job",
             status_code=303
         )
 
-    # Temporary fixed company ID
-    company_id = "C000001"
-
-    # Additional fields
-    job["company_id"] = company_id
-    job["status"] = "Active"
-    job["created_at"] = firestore.SERVER_TIMESTAMP
-    job["updated_at"] = firestore.SERVER_TIMESTAMP
-
-    # Let Firestore automatically generate document ID
-    doc_ref = db.collection("job_list").document()
-
-    # Get the auto-generated ID
-    job["job_id"] = doc_ref.id
-
-    # Save job to Firestore
-    doc_ref.set(job)
-
-    # Remove temporary session
-    request.session.pop("job", None)
-
-    return RedirectResponse(
-        url="/manage-jobs",
-        status_code=303
+    return templates.TemplateResponse(
+        request=request,
+        name="reviewJob.html",
+        context={
+            "request": request,
+            "job": job,
+            "is_edit": False
+        }
     )
 
 @router.get("/delete-job/{job_id}")
@@ -306,24 +277,20 @@ async def delete_job(job_id: str):
 @router.get("/edit-job/{job_id}", response_class=HTMLResponse)
 async def edit_job(request: Request, job_id: str):
 
-    # Get the specific job from Firestore
     job_ref = db.collection("job_list").document(job_id)
     job_doc = job_ref.get()
 
-    # If job does not exist
     if not job_doc.exists:
         return RedirectResponse(
             url="/manage-jobs",
             status_code=303
         )
 
-    # Convert Firestore document into dictionary
     job = job_doc.to_dict()
 
-    # Make sure job_id is available
+    # Temporarily add Firestore document ID for HTML
     job["job_id"] = job_id
 
-    # Get all job categories
     category_docs = db.collection("job_category").stream()
 
     categories = []
@@ -331,7 +298,6 @@ async def edit_job(request: Request, job_id: str):
     for doc in category_docs:
         categories.append(doc.to_dict())
 
-    # Display editJob.html with existing job information
     return templates.TemplateResponse(
         request=request,
         name="editJob.html",
@@ -487,7 +453,8 @@ async def update_job_confirm(
             status_code=303
         )
 
-    # Don't update job_id itself
+    edited_job = edited_job.copy()
+
     edited_job.pop("job_id", None)
 
     # If original status was Draft and user confirms publishing,

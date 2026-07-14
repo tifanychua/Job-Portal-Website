@@ -499,9 +499,13 @@
 
         <div class="action-buttons">
 
-            <a href="/manage-jobs" class="cancel-btn">
+            <a href="/cancel-job"
+                class="cancel-btn"
+                onclick="return confirm('Are you sure you want to cancel? All unsaved job information will be lost.')">
+
                 <i class="fa-solid fa-xmark"></i>
                 Cancel
+
             </a>
 
             <button type="submit"
@@ -512,10 +516,15 @@
                 Save as Draft
             </button>
 
-            <button type="submit" class="next-btn">
-                Next: Review & Publish
-                <i class="fa-solid fa-arrow-right"></i>
-            </button>
+            <button type="submit"
+                class="next-btn"
+                name="action"
+                value="review">
+
+            Next: Review & Publish
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </button>
 
         </div>
 
@@ -640,6 +649,9 @@
 
         form.addEventListener("submit", function (event) {
 
+            // Detect which button was clicked
+            const clickedButton = event.submitter;
+
             let isValid = true;
             let firstInvalidField = null;
 
@@ -649,14 +661,15 @@
 
             requiredFields.forEach(field => {
 
-                // Remove previous red border
                 field.classList.remove("input-error");
 
-                // Check if empty
+                if (field.disabled || field.offsetParent === null) {
+                    return;
+                }
+
                 if (field.value.trim() === "") {
 
                     field.classList.add("input-error");
-
                     isValid = false;
 
                     if (!firstInvalidField) {
@@ -666,8 +679,6 @@
 
             });
 
-
-            // Stop going to review page if any required field is empty
             if (!isValid) {
 
                 event.preventDefault();
@@ -678,6 +689,20 @@
                 });
 
                 firstInvalidField.focus();
+
+                return;
+            }
+
+            // Ask for confirmation only when Save as Draft is clicked
+            if (clickedButton && clickedButton.value === "draft") {
+
+                const confirmed = confirm(
+                    "Are you sure you want to save this job posting as a draft? You can edit and publish it later."
+                );
+
+                if (!confirmed) {
+                    event.preventDefault();
+                }
             }
 
         });
@@ -690,6 +715,7 @@
                 this.value = this.value.replace(/[^A-Za-z\s\-\/()]/g, "");
 
             });
+            
     </script>
 </body>
 
