@@ -18,10 +18,11 @@ STATUS_META = {
     "Shortlisted": {"label": "Shortlisted", "color": "orange"},
     "Rejected": {"label": "Rejected", "color": "red"},
     "Offered": {"label": "Offered", "color": "green"},
+    "Reviewed": {"label": "Reviewed", "color": "yellow"},
 }
 
 
-FILTER_TABS = ["all", "submitted", "shortlisted", "offered", "rejected", "cancelled"]
+FILTER_TABS = ["all", "submitted", "reviewed", "shortlisted", "offered", "rejected", "cancelled"]
 
 
 def _format_timestamp(ts):

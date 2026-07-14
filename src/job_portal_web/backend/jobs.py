@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 from google.cloud.firestore_v1.base_query import FieldFilter
+from typing import List
 
 from database import db
 from collections import Counter
@@ -10,12 +11,18 @@ import os
 
 router = APIRouter()
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 UI_DIR = os.path.join(BASE_DIR, "ui")
 
 
 templates = Jinja2Templates(directory=UI_DIR)
+
+
+# ==============================
+# Popular Categories
+# ==============================
 
 
 def get_top_categories(limit=5):
@@ -31,11 +38,15 @@ def get_top_categories(limit=5):
         category = job.get("category")
 
         if category:
+
             counter[category] += 1
 
-    result = [category for category, count in counter.most_common(limit)]
+    return [category for category, count in counter.most_common(limit)]
 
-    return result
+
+# ==============================
+# Category List
+# ==============================
 
 
 def get_categories():
@@ -45,72 +56,155 @@ def get_categories():
     docs = db.collection("job_list").where(filter=FieldFilter("status", "==", "Active")).stream()
 
     for doc in docs:
+
         job = doc.to_dict()
 
         category = job.get("category")
 
         if category:
+
             categories.add(category)
 
     return sorted(categories)
 
 
+# ==============================
+# Find Company
+# ==============================
+
+
 def _find_company(company_ref):
-    """
-    Look up a company by document ID first,
-    then by name as fallback.
-    """
 
     if not company_ref:
+
         return None
 
-    # Search by document ID
+    # Search document ID
 
     company_doc = db.collection("company").document(company_ref).get()
 
     if company_doc.exists:
+
         return company_doc.to_dict()
 
-    # Search by company name
+    # Search company_id field
 
     matches = (
         db.collection("company")
-        .where(filter=FieldFilter("name", "==", company_ref))
+        .where(filter=FieldFilter("company_id", "==", company_ref))
         .limit(1)
         .stream()
     )
 
     for c in matches:
+
         return c.to_dict()
 
     return None
 
 
+# ==============================
+# Attach Company Information
+# ==============================
+
+
 def _attach_company_info(job):
 
+    job.setdefault("company_name", "Unknown")
+
     job.setdefault("company_logo", "image/default.jpg")
-
-    job.setdefault("companyName", "Unknown")
-
-    job.setdefault("location", "Unknown")
 
     company = _find_company(job.get("company_id"))
 
     if company:
 
-        job["company_logo"] = company.get("logo", "image/default.png")
+        job["company_name"] = company.get("companyName", "Unknown")
 
-        job["company_name"] = company.get("name", "Unknown")
+        # ==========================
+        # Gallery Image
+        # ==========================
 
-        job["location"] = company.get("location", "Unknown")
+        gallery_docs = (
+            db.collection("gallery")
+            .where(filter=FieldFilter("company_id", "==", job.get("company_id")))
+            .limit(1)
+            .stream()
+        )
+
+        for img in gallery_docs:
+
+            gallery = img.to_dict()
+
+            if gallery.get("image"):
+
+                job["company_logo"] = gallery.get("image")
+
+            break
+
+        if not job.get("location"):
+
+            job["location"] = company.get("location", "Unknown")
 
     return job
 
 
+# ==============================
+# Apply User Filters
+# ==============================
+
+
+def apply_filters(jobs, locations=None, positions=None, benefits=None):
+
+    if locations is None:
+
+        locations = []
+
+    if positions is None:
+
+        positions = []
+
+    if benefits is None:
+
+        benefits = []
+
+    filtered = jobs
+
+    # Location checkbox
+
+    if locations:
+
+        filtered = [job for job in filtered if job.get("location") in locations]
+
+    # Position checkbox
+
+    if positions:
+
+        filtered = [job for job in filtered if job.get("position") in positions]
+
+    # Benefit checkbox
+    # benefits stored as array
+
+    if benefits:
+
+        filtered = [job for job in filtered if any(b in job.get("benefits", []) for b in benefits)]
+
+    return filtered
+
+
 @router.get("/jobs", name="browse_jobs")
 def browse_jobs(
-    request: Request, q: str = Query(""), location: str = Query(""), page: int = Query(1)
+    request: Request,
+    q: str = Query(""),
+    category: str = Query(""),
+    location: List[str] = Query([]),
+    position: List[str] = Query([]),
+    benefits: List[str] = Query([]),
+    page: int = Query(1),
 ):
+
+    # ==================================
+    # Get all active jobs
+    # ==================================
 
     jobs = []
 
@@ -126,68 +220,96 @@ def browse_jobs(
 
         jobs.append(job)
 
-    # ---- Search filter ----
+    # ==================================
+    # Search Filter
+    # (ONLY this changes sidebar)
+    # ==================================
 
     if q:
 
-        search = q.lower()
+        keyword = q.lower()
 
         jobs = [
-            j
-            for j in jobs
-            if search in j.get("job_title", "").lower()
-            or search in j.get("companyName", "").lower()
+            job
+            for job in jobs
+            if keyword in job.get("job_title", "").lower()
+            or keyword in job.get("company_name", "").lower()
         ]
 
-    # ---- Location filter ----
+    # Category search
 
-    if location:
+    if category:
 
-        loc = location.lower()
+        jobs = [job for job in jobs if job.get("category", "").lower() == category.lower()]
 
-        jobs = [j for j in jobs if loc in j.get("location", "").lower()]
+    # ==================================
+    # Save search result
+    # Sidebar depends on this
+    # ==================================
 
-    # ---- Sidebar counts ----
+    search_jobs = jobs.copy()
 
-    location_count = {}
+    # ==================================
+    # Sidebar Count
+    # ==================================
 
-    job_type_count = {}
+    location_count = Counter()
 
-    experience_count = {}
+    position_count = Counter()
 
-    for job in jobs:
+    benefit_count = Counter()
 
-        loc = job.get("location", "Unknown")
+    for job in search_jobs:
 
-        location_count[loc] = location_count.get(loc, 0) + 1
+        location_count[job.get("location", "Unknown")] += 1
 
-        job_type = job.get("jobType", "Unknown")
+        position_count[job.get("position", "Unknown")] += 1
 
-        job_type_count[job_type] = job_type_count.get(job_type, 0) + 1
+        for benefit in job.get("benefits", []):
 
-        experience = job.get("experience", "Unknown")
+            benefit_count[benefit] += 1
 
-        experience_count[experience] = experience_count.get(experience, 0) + 1
+    locations = [{"name": key, "count": value} for key, value in location_count.items()]
 
-    locations = [{"name": k, "count": v} for k, v in location_count.items()]
+    positions = [{"name": key, "count": value} for key, value in position_count.items()]
 
-    job_types = [{"name": k, "count": v} for k, v in job_type_count.items()]
+    benefits_list = [{"name": key, "count": value} for key, value in benefit_count.items()]
 
-    experience_levels = [{"name": k, "count": v} for k, v in experience_count.items()]
+    # ==================================
+    # Apply checkbox filters
+    # (does NOT affect sidebar)
+    # ==================================
 
-    # ---- Pagination ----
+    jobs = apply_filters(search_jobs, locations=location, positions=position, benefits=benefits)
+
+    # ==================================
+    # Pagination
+    # ==================================
 
     per_page = 5
 
+    page = int(page)
+
     total_jobs = len(jobs)
 
-    total_pages = math.ceil(total_jobs / per_page)
+    total_pages = max(1, math.ceil(total_jobs / per_page))
 
-    start = (page - 1) * per_page
+    # pagination index
+    start_index = (page - 1) * per_page
 
-    end = start + per_page
+    end_index = start_index + per_page
 
-    jobs = jobs[start:end]
+    # display jobs
+    jobs = jobs[start_index:end_index]
+
+    # for showing "Showing x-y of z jobs"
+    show_start = start_index + 1
+
+    show_end = min(end_index, total_jobs)
+
+    # ==================================
+    # Other data
+    # ==================================
 
     topCategories = get_top_categories()
 
@@ -201,13 +323,21 @@ def browse_jobs(
             "jobs": jobs,
             "total_jobs": total_jobs,
             "total_pages": total_pages,
-            "topCategories": topCategories[:5],
-            "categories": categories,
             "page": page,
+            "start": show_start,
+            "end": show_end,
+            # Search value
             "query": q,
-            "location_query": location,
+            "categories": categories,
+            "category": category,
+            "topCategories": topCategories,
+            # Sidebar
             "locations": locations,
-            "job_types": job_types,
-            "experience_levels": experience_levels,
+            "positions": positions,
+            "benefits": benefits_list,
+            # Checked state
+            "selected_locations": location,
+            "selected_positions": position,
+            "selected_benefits": benefits,
         },
     )
