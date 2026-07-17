@@ -9,10 +9,10 @@ from pytest_bdd import scenarios, given, when, then
 from src.job_portal_web.backend.main import app
 from src.job_portal_web.backend.database import db
 
-
 # ==================================================
 # Test Client
 # ==================================================
+
 
 @pytest.fixture
 def client():
@@ -24,49 +24,27 @@ def client():
 # Publish Job Data
 # ==================================================
 
+
 def publish_form_data():
 
     return {
-
         "job_title": "QA Automation Engineer",
-
         "category": "Information Technology",
-
         "employment_type": "Full-time",
-
         "position": "Senior Engineer",
-
         "vacancies": 2,
-
         "location": "Kuala Lumpur",
-
         "job_desc": "Responsible for automation testing.",
-
         "job_responsibility": "Develop and maintain automated test scripts.",
-
         "job_req": "Python, Selenium, FastAPI",
-
         "additional_info": "Hybrid Working",
-
         "salaryType": "fixed",
-
         "salary": "6500",
-
         "minSalary": "",
-
         "maxSalary": "",
-
-        "benefits": [
-
-            "EPF",
-
-            "SOCSO"
-
-        ],
-
+        "benefits": ["EPF", "SOCSO"],
         "other_benefit": "",
-
-        "action": "review"
+        "action": "review",
     }
 
 
@@ -75,25 +53,14 @@ def publish_form_data():
 # Employer publishes a job posting
 # ==================================================
 
+
 def test_publish_job_success(client):
 
-    response = client.post(
-
-        "/review-job",
-
-        data=publish_form_data()
-
-    )
+    response = client.post("/review-job", data=publish_form_data())
 
     assert response.status_code == 200
 
-    response = client.post(
-
-        "/publish-job-confirm",
-
-        follow_redirects=False
-
-    )
+    response = client.post("/publish-job-confirm", follow_redirects=False)
 
     assert response.status_code == 303
 
@@ -105,35 +72,16 @@ def test_publish_job_success(client):
 # Save published job
 # ==================================================
 
+
 def test_save_published_job(client):
 
-    client.post(
+    client.post("/review-job", data=publish_form_data())
 
-        "/review-job",
-
-        data=publish_form_data()
-
-    )
-
-    response = client.post(
-
-        "/publish-job-confirm",
-
-        follow_redirects=False
-
-    )
+    response = client.post("/publish-job-confirm", follow_redirects=False)
 
     assert response.status_code == 303
 
-    jobs = (
-
-        db.collection("job_list")
-
-        .where("job_title", "==", "QA Automation Engineer")
-
-        .stream()
-
-    )
+    jobs = db.collection("job_list").where("job_title", "==", "QA Automation Engineer").stream()
 
     found = False
 
@@ -157,33 +105,14 @@ def test_save_published_job(client):
 # Job seeker views published job
 # ==================================================
 
+
 def test_job_seeker_view_published_job(client):
 
-    client.post(
+    client.post("/review-job", data=publish_form_data())
 
-        "/review-job",
+    client.post("/publish-job-confirm", follow_redirects=False)
 
-        data=publish_form_data()
-
-    )
-
-    client.post(
-
-        "/publish-job-confirm",
-
-        follow_redirects=False
-
-    )
-
-    jobs = (
-
-        db.collection("job_list")
-
-        .where("job_title", "==", "QA Automation Engineer")
-
-        .stream()
-
-    )
+    jobs = db.collection("job_list").where("job_title", "==", "QA Automation Engineer").stream()
 
     assert any(True for _ in jobs)
 
@@ -194,15 +123,10 @@ def test_job_seeker_view_published_job(client):
 # Negative Test
 # ==================================================
 
+
 def test_publish_without_session(client):
 
-    response = client.post(
-
-        "/publish-job-confirm",
-
-        follow_redirects=False
-
-    )
+    response = client.post("/publish-job-confirm", follow_redirects=False)
 
     assert response.status_code == 303
 
@@ -220,6 +144,7 @@ scenarios("features/jobPublish.feature")
 # Context
 # ==================================================
 
+
 class Context:
 
     def __init__(self):
@@ -232,10 +157,12 @@ def context():
 
     return Context()
 
+
 # ==================================================
 # Scenario 1
 # Employer publishes a job posting
 # ==================================================
+
 
 @given("the employer has created a job posting")
 def created_job(context):
@@ -246,15 +173,9 @@ def created_job(context):
 @when("the employer submits the job posting for publication")
 def publish_job(client, context):
 
-    client.post(
-        "/review-job",
-        data=publish_form_data()
-    )
+    client.post("/review-job", data=publish_form_data())
 
-    context.response = client.post(
-        "/publish-job-confirm",
-        follow_redirects=False
-    )
+    context.response = client.post("/publish-job-confirm", follow_redirects=False)
 
 
 @then("the job posting should be published successfully")
@@ -270,18 +191,13 @@ def verify_publish(context):
 # Save published job posting
 # ==================================================
 
+
 @given("the employer has published a job posting")
 def published_job(client, context):
 
-    client.post(
-        "/review-job",
-        data=publish_form_data()
-    )
+    client.post("/review-job", data=publish_form_data())
 
-    client.post(
-        "/publish-job-confirm",
-        follow_redirects=False
-    )
+    client.post("/publish-job-confirm", follow_redirects=False)
 
 
 @when("the publication process is completed")
@@ -293,11 +209,7 @@ def publication_completed(context):
 @then("the job posting information should be saved in the database")
 def verify_saved():
 
-    jobs = (
-        db.collection("job_list")
-        .where("job_title", "==", "QA Automation Engineer")
-        .stream()
-    )
+    jobs = db.collection("job_list").where("job_title", "==", "QA Automation Engineer").stream()
 
     found = False
 
@@ -305,10 +217,7 @@ def verify_saved():
 
         job = doc.to_dict()
 
-        if (
-            job["status"] == "Active"
-            and job["location"] == "Kuala Lumpur"
-        ):
+        if job["status"] == "Active" and job["location"] == "Kuala Lumpur":
             found = True
             break
 
@@ -322,36 +231,25 @@ def verify_saved():
 # Job seeker views published job
 # ==================================================
 
+
 @given("the employer has published a job posting")
 def published_job_again(client, context):
 
-    client.post(
-        "/review-job",
-        data=publish_form_data()
-    )
+    client.post("/review-job", data=publish_form_data())
 
-    client.post(
-        "/publish-job-confirm",
-        follow_redirects=False
-    )
+    client.post("/publish-job-confirm", follow_redirects=False)
 
 
 @when("a job seeker browses available jobs")
 def browse_jobs(client, context):
 
-    context.response = client.get(
-        "/manage-jobs"
-    )
+    context.response = client.get("/manage-jobs")
 
 
 @then("the published job posting should be displayed")
 def verify_display(context):
 
-    jobs = (
-        db.collection("job_list")
-        .where("job_title", "==", "QA Automation Engineer")
-        .stream()
-    )
+    jobs = db.collection("job_list").where("job_title", "==", "QA Automation Engineer").stream()
 
     found = False
 

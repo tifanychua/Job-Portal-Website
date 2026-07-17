@@ -9,10 +9,10 @@ from pytest_bdd import scenarios, given, when, then
 from src.job_portal_web.backend.main import app
 from src.job_portal_web.backend.database import db
 
-
 # ==================================================
 # Test Client
 # ==================================================
+
 
 @pytest.fixture
 def client():
@@ -25,14 +25,12 @@ def client():
 # Employer removes a job
 # ==================================================
 
+
 def test_remove_job_success(client):
 
     job_id = "dj9cf1SmQjOYhVm5b6SL"
 
-    response = client.get(
-        f"/delete-job/{job_id}",
-        follow_redirects=False
-    )
+    response = client.get(f"/delete-job/{job_id}", follow_redirects=False)
 
     assert response.status_code == 303
 
@@ -44,20 +42,14 @@ def test_remove_job_success(client):
 # Verify status becomes Deleted
 # ==================================================
 
+
 def test_job_status_updated(client):
 
     job_id = "dj9cf1SmQjOYhVm5b6SL"
 
-    client.get(
-        f"/delete-job/{job_id}",
-        follow_redirects=False
-    )
+    client.get(f"/delete-job/{job_id}", follow_redirects=False)
 
-    doc = (
-        db.collection("job_list")
-        .document(job_id)
-        .get()
-    )
+    doc = db.collection("job_list").document(job_id).get()
 
     assert doc.exists
 
@@ -73,14 +65,12 @@ def test_job_status_updated(client):
 # Deleted job is hidden
 # ==================================================
 
+
 def test_deleted_job_not_displayed(client):
 
     job_id = "dj9cf1SmQjOYhVm5b6SL"
 
-    client.get(
-        f"/delete-job/{job_id}",
-        follow_redirects=False
-    )
+    client.get(f"/delete-job/{job_id}", follow_redirects=False)
 
     response = client.get("/manage-jobs")
 
@@ -95,12 +85,10 @@ def test_deleted_job_not_displayed(client):
 # Negative Test
 # ==================================================
 
+
 def test_remove_invalid_job(client):
 
-    response = client.get(
-        "/delete-job/INVALID_JOB",
-        follow_redirects=False
-    )
+    response = client.get("/delete-job/INVALID_JOB", follow_redirects=False)
 
     assert response.status_code in [303, 404, 500]
 
@@ -117,6 +105,7 @@ scenarios("features/jobRemove.feature")
 # ==================================================
 # Context
 # ==================================================
+
 
 class Context:
 
@@ -138,6 +127,7 @@ def context():
 # Employer removes a job posting
 # ==================================================
 
+
 @given("the employer has an existing job posting")
 def existing_job(context):
 
@@ -147,10 +137,7 @@ def existing_job(context):
 @when("the employer selects the remove job posting option")
 def remove_job(client, context):
 
-    context.response = client.get(
-        f"/delete-job/{context.job_id}",
-        follow_redirects=False
-    )
+    context.response = client.get(f"/delete-job/{context.job_id}", follow_redirects=False)
 
 
 @then("the job posting should be removed successfully")
@@ -166,15 +153,13 @@ def verify_removed(context):
 # Update status after removal
 # ==================================================
 
+
 @given("the employer has removed a job posting")
 def removed_job(client, context):
 
     context.job_id = "dj9cf1SmQjOYhVm5b6SL"
 
-    client.get(
-        f"/delete-job/{context.job_id}",
-        follow_redirects=False
-    )
+    client.get(f"/delete-job/{context.job_id}", follow_redirects=False)
 
 
 @when("the removal process is completed")
@@ -186,11 +171,7 @@ def removal_completed(context):
 @then("the job posting status should be updated in the database")
 def verify_status(context):
 
-    doc = (
-        db.collection("job_list")
-        .document(context.job_id)
-        .get()
-    )
+    doc = db.collection("job_list").document(context.job_id).get()
 
     assert doc.exists
 
@@ -206,15 +187,13 @@ def verify_status(context):
 # Job seeker cannot view removed jobs
 # ==================================================
 
+
 @given("the employer has removed a job posting")
 def removed_job_again(client, context):
 
     context.job_id = "dj9cf1SmQjOYhVm5b6SL"
 
-    client.get(
-        f"/delete-job/{context.job_id}",
-        follow_redirects=False
-    )
+    client.get(f"/delete-job/{context.job_id}", follow_redirects=False)
 
 
 @when("a job seeker browses available jobs")

@@ -9,10 +9,10 @@ from pytest_bdd import scenarios, given, when, then
 from src.job_portal_web.backend.main import app
 from src.job_portal_web.backend.database import db
 
-
 # ==================================================
 # Test Client
 # ==================================================
+
 
 @pytest.fixture
 def client():
@@ -32,21 +32,14 @@ APPLICATION_ID = "0A3aaiDL702tynWjBwrY"
 # Employer views applicant resume
 # ==================================================
 
+
 def test_view_resume_success(client):
 
-    response = client.get(
-
-        f"/application/resume/{APPLICATION_ID}",
-
-        follow_redirects=False
-
-    )
+    response = client.get(f"/application/resume/{APPLICATION_ID}", follow_redirects=False)
 
     assert response.status_code == 307
 
-    print(
-        "✅ Acceptance Test Passed: Employer viewed the applicant resume successfully."
-    )
+    print("✅ Acceptance Test Passed: Employer viewed the applicant resume successfully.")
 
 
 # ==================================================
@@ -54,17 +47,10 @@ def test_view_resume_success(client):
 # Resume information exists
 # ==================================================
 
+
 def test_resume_exists():
 
-    application = (
-
-        db.collection("application")
-
-        .document(APPLICATION_ID)
-
-        .get()
-
-    )
+    application = db.collection("application").document(APPLICATION_ID).get()
 
     assert application.exists
 
@@ -72,9 +58,7 @@ def test_resume_exists():
 
     assert data.get("resume_path")
 
-    print(
-        "✅ Acceptance Test Passed: Applicant resume exists in Firestore."
-    )
+    print("✅ Acceptance Test Passed: Applicant resume exists in Firestore.")
 
 
 # ==================================================
@@ -82,23 +66,16 @@ def test_resume_exists():
 # Secure resume access
 # ==================================================
 
+
 def test_secure_resume_link(client):
 
-    response = client.get(
-
-        f"/application/resume/{APPLICATION_ID}",
-
-        follow_redirects=False
-
-    )
+    response = client.get(f"/application/resume/{APPLICATION_ID}", follow_redirects=False)
 
     assert response.status_code == 307
 
     assert "location" in response.headers
 
-    print(
-        "✅ Acceptance Test Passed: Secure resume link generated successfully."
-    )
+    print("✅ Acceptance Test Passed: Secure resume link generated successfully.")
 
 
 # ==================================================
@@ -106,27 +83,14 @@ def test_secure_resume_link(client):
 # Unauthorized resume access
 # ==================================================
 
+
 def test_unauthorized_resume_access(client):
 
-    response = client.get(
+    response = client.get("/application/resume/INVALID_APPLICATION", follow_redirects=False)
 
-        "/application/resume/INVALID_APPLICATION",
+    assert response.status_code in [403, 404]
 
-        follow_redirects=False
-
-    )
-
-    assert response.status_code in [
-
-        403,
-
-        404
-
-    ]
-
-    print(
-        "✅ Negative Test Passed: Unauthorized resume access denied."
-    )
+    print("✅ Negative Test Passed: Unauthorized resume access denied.")
 
 
 # ==================================================
@@ -139,6 +103,7 @@ scenarios("features/viewResume.feature")
 # ==================================================
 # Context
 # ==================================================
+
 
 class Context:
 
@@ -154,10 +119,12 @@ def context():
 
     return Context()
 
+
 # ==================================================
 # Scenario 1
 # Employer views applicant resume
 # ==================================================
+
 
 @given("the employer has received a job application")
 def received_application(context):
@@ -169,11 +136,7 @@ def received_application(context):
 def access_resume(client, context):
 
     context.response = client.get(
-
-        f"/application/resume/{context.application_id}",
-
-        follow_redirects=False
-
+        f"/application/resume/{context.application_id}", follow_redirects=False
     )
 
 
@@ -192,6 +155,7 @@ def verify_resume(context):
 # Restrict unauthorized resume access
 # ==================================================
 
+
 @given("a user is not the employer who received the application")
 def unauthorized_user(context):
 
@@ -202,11 +166,7 @@ def unauthorized_user(context):
 def unauthorized_access(client, context):
 
     context.response = client.get(
-
-        f"/application/resume/{context.application_id}",
-
-        follow_redirects=False
-
+        f"/application/resume/{context.application_id}", follow_redirects=False
     )
 
 

@@ -9,10 +9,10 @@ from pytest_bdd import scenarios, given, when, then
 from src.job_portal_web.backend.main import app
 from src.job_portal_web.backend.database import db
 
-
 # ==================================================
 # Test Client
 # ==================================================
+
 
 @pytest.fixture
 def client():
@@ -32,25 +32,14 @@ APPLICATION_ID = "0A3aaiDL702tynWjBwrY"
 # Employer rejects applicant
 # ==================================================
 
+
 def test_reject_applicant_success(client):
 
-    response = client.put(
-
-        f"/application/{APPLICATION_ID}/status",
-
-        json={
-
-            "status": "Rejected"
-
-        }
-
-    )
+    response = client.put(f"/application/{APPLICATION_ID}/status", json={"status": "Rejected"})
 
     assert response.status_code == 200
 
-    print(
-        "✅ Acceptance Test Passed: Employer rejected the applicant successfully."
-    )
+    print("✅ Acceptance Test Passed: Employer rejected the applicant successfully.")
 
 
 # ==================================================
@@ -58,29 +47,12 @@ def test_reject_applicant_success(client):
 # Applicant status updated
 # ==================================================
 
+
 def test_applicant_status_updated(client):
 
-    client.put(
+    client.put(f"/application/{APPLICATION_ID}/status", json={"status": "Rejected"})
 
-        f"/application/{APPLICATION_ID}/status",
-
-        json={
-
-            "status": "Rejected"
-
-        }
-
-    )
-
-    doc = (
-
-        db.collection("application")
-
-        .document(APPLICATION_ID)
-
-        .get()
-
-    )
+    doc = db.collection("application").document(APPLICATION_ID).get()
 
     assert doc.exists
 
@@ -88,9 +60,7 @@ def test_applicant_status_updated(client):
 
     assert application["status"] == "Rejected"
 
-    print(
-        "✅ Acceptance Test Passed: Applicant status updated successfully."
-    )
+    print("✅ Acceptance Test Passed: Applicant status updated successfully.")
 
 
 # ==================================================
@@ -98,17 +68,10 @@ def test_applicant_status_updated(client):
 # Status saved in Firestore
 # ==================================================
 
+
 def test_rejected_saved_database():
 
-    doc = (
-
-        db.collection("application")
-
-        .document(APPLICATION_ID)
-
-        .get()
-
-    )
+    doc = db.collection("application").document(APPLICATION_ID).get()
 
     assert doc.exists
 
@@ -116,40 +79,21 @@ def test_rejected_saved_database():
 
     assert application["status"] == "Rejected"
 
-    print(
-        "✅ Acceptance Test Passed: Rejected status saved in database."
-    )
+    print("✅ Acceptance Test Passed: Rejected status saved in database.")
 
 
 # ==================================================
 # Negative Test
 # ==================================================
 
+
 def test_reject_invalid_application(client):
 
-    response = client.put(
+    response = client.put("/application/INVALID_APPLICATION/status", json={"status": "Rejected"})
 
-        "/application/INVALID_APPLICATION/status",
+    assert response.status_code in [404, 400]
 
-        json={
-
-            "status": "Rejected"
-
-        }
-
-    )
-
-    assert response.status_code in [
-
-        404,
-
-        400
-
-    ]
-
-    print(
-        "✅ Negative Test Passed: Invalid application handled correctly."
-    )
+    print("✅ Negative Test Passed: Invalid application handled correctly.")
 
 
 # ==================================================
@@ -162,6 +106,7 @@ scenarios("features/rejectApplicant.feature")
 # ==================================================
 # Context
 # ==================================================
+
 
 class Context:
 
@@ -177,10 +122,12 @@ def context():
 
     return Context()
 
+
 # ==================================================
 # Scenario 1
 # Employer rejects an applicant
 # ==================================================
+
 
 @given("the employer has received job applications")
 def received_applications(context):
@@ -192,15 +139,7 @@ def received_applications(context):
 def reject_applicant(client, context):
 
     context.response = client.put(
-
-        f"/application/{context.application_id}/status",
-
-        json={
-
-            "status": "Rejected"
-
-        }
-
+        f"/application/{context.application_id}/status", json={"status": "Rejected"}
     )
 
 
@@ -209,11 +148,7 @@ def verify_rejected(context):
 
     assert context.response.status_code == 200
 
-    doc = (
-        db.collection("application")
-        .document(context.application_id)
-        .get()
-    )
+    doc = db.collection("application").document(context.application_id).get()
 
     assert doc.exists
 
@@ -221,9 +156,7 @@ def verify_rejected(context):
 
     assert application["status"] == "Rejected"
 
-    print(
-        "✅ Scenario Passed: Applicant status updated to Rejected."
-    )
+    print("✅ Scenario Passed: Applicant status updated to Rejected.")
 
 
 # ==================================================
@@ -231,22 +164,13 @@ def verify_rejected(context):
 # Save rejected applicant status
 # ==================================================
 
+
 @given("the employer has rejected an applicant")
 def rejected_applicant(client, context):
 
     context.application_id = APPLICATION_ID
 
-    client.put(
-
-        f"/application/{context.application_id}/status",
-
-        json={
-
-            "status": "Rejected"
-
-        }
-
-    )
+    client.put(f"/application/{context.application_id}/status", json={"status": "Rejected"})
 
 
 @when("the rejection action is completed")
@@ -258,11 +182,7 @@ def rejection_completed(context):
 @then("the updated applicant status should be saved in the database")
 def verify_saved(context):
 
-    doc = (
-        db.collection("application")
-        .document(context.application_id)
-        .get()
-    )
+    doc = db.collection("application").document(context.application_id).get()
 
     assert doc.exists
 
@@ -270,6 +190,4 @@ def verify_saved(context):
 
     assert application["status"] == "Rejected"
 
-    print(
-        "✅ Scenario Passed: Updated applicant status saved in database."
-    )
+    print("✅ Scenario Passed: Updated applicant status saved in database.")

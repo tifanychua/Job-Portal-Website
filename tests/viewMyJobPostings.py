@@ -8,10 +8,10 @@ from pytest_bdd import scenarios, given, when, then
 
 from src.job_portal_web.backend.main import app
 
-
 # ==================================================
 # Test Client
 # ==================================================
+
 
 @pytest.fixture
 def client():
@@ -31,21 +31,21 @@ COMPANY_ID = "C000001"
 # Employer views all job postings
 # ==================================================
 
+
 def test_view_job_postings_success(client):
 
     response = client.get("/manage-jobs")
 
     assert response.status_code == 200
 
-    print(
-        "✅ Acceptance Test Passed: Employer viewed all job postings successfully."
-    )
+    print("✅ Acceptance Test Passed: Employer viewed all job postings successfully.")
 
 
 # ==================================================
 # Acceptance Test 2
 # Latest job postings displayed
 # ==================================================
+
 
 def test_latest_job_postings_displayed(client):
 
@@ -58,15 +58,14 @@ def test_latest_job_postings_displayed(client):
     # Page loaded successfully
     assert "Manage Jobs" in html
 
-    print(
-        "✅ Acceptance Test Passed: Latest job postings displayed successfully."
-    )
+    print("✅ Acceptance Test Passed: Latest job postings displayed successfully.")
 
 
 # ==================================================
 # Acceptance Test 3
 # Employer only sees own job postings
 # ==================================================
+
 
 def test_only_employer_job_postings_displayed(client):
 
@@ -79,9 +78,7 @@ def test_only_employer_job_postings_displayed(client):
     # Manage Jobs page should load successfully
     assert "Manage Jobs" in html
 
-    print(
-        "✅ Acceptance Test Passed: Employer can view only their own job postings."
-    )
+    print("✅ Acceptance Test Passed: Employer can view only their own job postings.")
 
 
 # ==================================================
@@ -89,15 +86,14 @@ def test_only_employer_job_postings_displayed(client):
 # Invalid page
 # ==================================================
 
+
 def test_invalid_manage_jobs_page(client):
 
     response = client.get("/manage-jobs-invalid")
 
     assert response.status_code == 404
 
-    print(
-        "✅ Negative Test Passed: Invalid page handled correctly."
-    )
+    print("✅ Negative Test Passed: Invalid page handled correctly.")
 
 
 # ==================================================
@@ -110,6 +106,7 @@ scenarios("features/viewMyJobPostings.feature")
 # ==================================================
 # Context
 # ==================================================
+
 
 class Context:
 
@@ -125,10 +122,12 @@ def context():
 
     return Context()
 
+
 # ==================================================
 # Scenario 1
 # Employer views all job postings
 # ==================================================
+
 
 @given("the employer has created one or more job postings")
 def employer_has_jobs(context):
@@ -151,15 +150,14 @@ def verify_job_postings(context):
 
     assert "Manage Jobs" in html
 
-    print(
-        "✅ Scenario Passed: Employer viewed all job postings successfully."
-    )
+    print("✅ Scenario Passed: Employer viewed all job postings successfully.")
 
 
 # ==================================================
 # Scenario 2
 # Display latest job posting information
 # ==================================================
+
 
 @given("the employer is viewing the Manage Jobs page")
 def employer_viewing_page(client, context):
@@ -182,15 +180,14 @@ def verify_latest_jobs(context):
 
     assert "Manage Jobs" in html
 
-    print(
-        "✅ Scenario Passed: Latest job posting information displayed successfully."
-    )
+    print("✅ Scenario Passed: Latest job posting information displayed successfully.")
 
 
 # ==================================================
 # Scenario 3
 # Employer has no job postings
 # ==================================================
+
 
 @given("the employer has not created any job postings")
 def employer_has_no_jobs(context):
@@ -216,11 +213,6 @@ def verify_no_jobs_message(context):
     html = context.response.text
 
     # Accept either the actual empty message or a normal page load.
-    assert (
-        "No jobs have been posted yet" in html
-        or "Manage Jobs" in html
-    )
+    assert "No jobs have been posted yet" in html or "Manage Jobs" in html
 
-    print(
-        "✅ Scenario Passed: Empty job posting list handled successfully."
-    )
+    print("✅ Scenario Passed: Empty job posting list handled successfully.")

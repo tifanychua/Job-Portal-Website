@@ -9,10 +9,10 @@ from pytest_bdd import scenarios, given, when, then
 from src.job_portal_web.backend.main import app
 from src.job_portal_web.backend.database import db
 
-
 # ==================================================
 # Test Client
 # ==================================================
+
 
 @pytest.fixture
 def client():
@@ -32,6 +32,7 @@ COMPANY_ID = "C000001"
 # Employer views applicants
 # ==================================================
 
+
 def test_view_applications_success(client):
 
     response = client.get("/applications")
@@ -46,15 +47,14 @@ def test_view_applications_success(client):
 # Verify application records exist
 # ==================================================
 
+
 def test_application_data_loaded(client):
 
     response = client.get("/applications")
 
     assert response.status_code == 200
 
-    applications = list(
-        db.collection("application").stream()
-    )
+    applications = list(db.collection("application").stream())
 
     assert len(applications) > 0
 
@@ -66,6 +66,7 @@ def test_application_data_loaded(client):
 # Verify employer's applications are displayed
 # ==================================================
 
+
 def test_applicant_list_displayed(client):
 
     response = client.get("/applications")
@@ -74,10 +75,7 @@ def test_applicant_list_displayed(client):
 
     applications = []
 
-    application_docs = (
-        db.collection("application")
-        .stream()
-    )
+    application_docs = db.collection("application").stream()
 
     for application_doc in application_docs:
 
@@ -88,11 +86,7 @@ def test_applicant_list_displayed(client):
         if not job_id:
             continue
 
-        job_doc = (
-            db.collection("job_list")
-            .document(job_id)
-            .get()
-        )
+        job_doc = db.collection("job_list").document(job_id).get()
 
         if not job_doc.exists:
             continue
@@ -111,6 +105,7 @@ def test_applicant_list_displayed(client):
 # ==================================================
 # Negative Test
 # ==================================================
+
 
 def test_invalid_route(client):
 
@@ -132,6 +127,7 @@ scenarios("features/viewApplication.feature")
 # Context
 # ==================================================
 
+
 class Context:
 
     def __init__(self):
@@ -144,10 +140,12 @@ def context():
 
     return Context()
 
+
 # ==================================================
 # Scenario
 # Employer views applicants for a job posting
 # ==================================================
+
 
 @given("the employer has an active job posting")
 def active_job(context):
@@ -158,9 +156,7 @@ def active_job(context):
 @given("applicants have submitted applications")
 def submitted_applications():
 
-    applications = list(
-        db.collection("application").stream()
-    )
+    applications = list(db.collection("application").stream())
 
     assert len(applications) > 0
 
@@ -178,10 +174,7 @@ def verify_applicant_list(context):
 
     applications = []
 
-    application_docs = (
-        db.collection("application")
-        .stream()
-    )
+    application_docs = db.collection("application").stream()
 
     for application_doc in application_docs:
 
@@ -192,11 +185,7 @@ def verify_applicant_list(context):
         if not job_id:
             continue
 
-        job_doc = (
-            db.collection("job_list")
-            .document(job_id)
-            .get()
-        )
+        job_doc = db.collection("job_list").document(job_id).get()
 
         if not job_doc.exists:
             continue
