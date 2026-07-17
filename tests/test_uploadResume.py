@@ -31,7 +31,7 @@ def test_upload_resume_success(client: TestClient):
     Then the resume should be uploaded successfully
     """
 
-    job_id = "0ZWvjQqV3DMLANrbIRUs"
+    job_id = "RqUW5tySLpBIjbcY7c1c"
 
     response = client.post(
         f"/jobs/{job_id}/apply",
@@ -66,7 +66,7 @@ def test_resume_information_saved(client: TestClient):
     Then the resume information should be stored
     """
 
-    job_id = "0ZWvjQqV3DMLANrbIRUs"
+    job_id = "RqUW5tySLpBIjbcY7c1c"
 
     upload_response = client.post(
         f"/jobs/{job_id}/apply",
@@ -110,7 +110,7 @@ class Context:
 
         self.response = None
 
-        self.job_id = "0ZWvjQqV3DMLANrbIRUs"
+        self.job_id = "RqUW5tySLpBIjbcY7c1c"
 
         self.application_id = None
 
