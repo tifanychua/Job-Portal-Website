@@ -5,7 +5,7 @@ from typing import List
 
 from .database import db
 from collections import Counter
-
+from collections import defaultdict
 import math
 import os
 
@@ -250,11 +250,9 @@ def browse_jobs(
     # Sidebar Count
     # ==================================
 
-    location_count = Counter()
-
-    position_count = Counter()
-
-    benefit_count = Counter()
+    location_count: defaultdict[str, int] = defaultdict(int)
+    position_count: defaultdict[str, int] = defaultdict(int)
+    benefit_count: defaultdict[str, int] = defaultdict(int)
 
     for job in search_jobs:
 
