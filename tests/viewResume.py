@@ -6,8 +6,8 @@ from fastapi.testclient import TestClient
 
 from pytest_bdd import scenarios, given, when, then
 
-from src.job_portal_web.backend.main import app
-from src.job_portal_web.backend.database import db
+from job_portal_web.backend.main import app
+from job_portal_web.backend.database import db
 
 # ==================================================
 # Test Client
