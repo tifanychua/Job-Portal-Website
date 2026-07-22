@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/base.css">
+</head>
+
+<body>
+
+{% include "components/header.html" %}
+
+<!-- ================= HERO ================= -->
+
+<section class="profile-hero">
+
+    <div class="profile-hero-inner">
+
+        <div class="profile-top">
+
+            <div>
+
+                <h1 class="text-page-title">
+                    My Profile
+                </h1>
+
+                <p class="text-normal">
+                    Manage your personal information and professional details.
+                </p>
+
+            </div>
+
+            <button class="profile-primary-btn">
+                <i class="fa-solid fa-pen"></i>
+                Edit Profile
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= MAIN CONTENT ================= -->
+
+<div class="profile-page">
+
+    <!-- ================= PROFILE CARD ================= -->
+
+    <div class="profile-card">
+
+        <!-- Left -->
+
+        <div class="profile-left">
+
+            <div class="profile-photo">
+                <img src="/images/user.png" alt="Profile">
+            </div>
+
+            <div class="profile-basic">
+
+                <div class="profile-name">
+
+                    <h2>Pei Wen</h2>
+
+                    <span>Job Seeker</span>
+
+                </div>
+
+                <h4>Software Engineer</h4>
+
+                <div class="profile-contact">
+
+                    <p>
+                        <i class="fa-solid fa-location-dot"></i>
+                        Kuala Lumpur, Malaysia
+                    </p>
+
+                    <p>
+                        <i class="fa-regular fa-envelope"></i>
+                        peiwen@gmail.com
+                    </p>
+
+                    <p>
+                        <i class="fa-solid fa-phone"></i>
+                        +60 12-3456789
+                    </p>
+
+                    <p>
+                        <i class="fa-solid fa-link"></i>
+                        linkedin.com/in/peiwen
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Middle -->
+
+        <div class="profile-middle">
+
+            <div class="profile-info">
+                <label>Current Position</label>
+                <p>Software Engineer at ABC Tech</p>
+            </div>
+
+            <div class="profile-info">
+                <label>Experience</label>
+                <p>3+ Years</p>
+            </div>
+
+            <div class="profile-info">
+                <label>Education</label>
+                <p>Bachelor of Computer Science</p>
+            </div>
+
+            <div class="profile-info">
+                <label>Availability</label>
+                <p class="available">Open to opportunities</p>
+            </div>
+
+        </div>
+
+        <!-- Right -->
+
+        <div class="profile-right">
+
+            <h3>About Me</h3>
+
+            <p>
+                Passionate software engineer with over three years of
+                experience developing scalable web applications.
+                Skilled in Java, JavaScript, Python, SQL,
+                React and cloud technologies.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- ================= EDUCATION ================= -->
+
+    <div class="profile-section">
+
+        <div class="section-icon purple">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+
+        <div class="section-title">
+
+            <h3>Education</h3>
+
+            <p>
+                Add your educational background and qualifications.
+            </p>
+
+        </div>
+
+        <div class="section-detail">
+
+            <h4>Bachelor of Computer Science</h4>
+
+            <p>University of Malaya</p>
+
+            <span>2017 - 2021</span>
+
+        </div>
+
+        <button class="profile-outline-btn">
+            Manage Education
+        </button>
+
+    </div>
+
+    <!-- ================= SKILLS ================= -->
+
+    <div class="profile-section">
+
+        <div class="section-icon orange">
+            <i class="fa-solid fa-code"></i>
+        </div>
+
+        <div class="section-title">
+
+            <h3>Skills</h3>
+
+            <p>
+                Add and manage your professional skills.
+            </p>
+
+        </div>
+
+        <div class="section-detail">
+
+            <div class="skill-list">
+
+                <span>Java</span>
+                <span>JavaScript</span>
+                <span>Python</span>
+                <span>React</span>
+                <span>Node.js</span>
+                <span>SQL</span>
+                <span>Git</span>
+                <span>AWS</span>
+
+            </div>
+
+        </div>
+
+        <button class="profile-outline-btn">
+            Manage Skills
+        </button>
+
+    </div>
+
+    <!-- ================= EXPERIENCE ================= -->
+
+    <div class="profile-section">
+
+        <div class="section-icon blue">
+            <i class="fa-solid fa-briefcase"></i>
+        </div>
+
+        <div class="section-title">
+
+            <h3>Experience</h3>
+
+            <p>
+                Add your work experience and career history.
+            </p>
+
+        </div>
+
+        <div class="section-detail">
+
+            <h4>Software Engineer</h4>
+
+            <p>ABC Tech Solutions</p>
+
+            <span>Jan 2022 - Present</span>
+
+        </div>
+
+        <button class="profile-outline-btn">
+            Manage Experience
+        </button>
+
+    </div>
+
+    <!-- ================= ADDITIONAL INFORMATION ================= -->
+
+    <div class="additional-card">
+
+        <div class="additional-header">
+
+            <h3>Additional Information</h3>
+
+            <button class="profile-outline-btn">
+                Edit Information
+            </button>
+
+        </div>
+
+        <div class="additional-grid">
+
+            <div>
+
+                <label>Date of Birth</label>
+                <p>15 March 1998</p>
+
+                <label>Gender</label>
+                <p>Female</p>
+
+            </div>
+
+            <div>
+
+                <label>Languages</label>
+                <p>English, Malay, Chinese</p>
+
+                <label>Nationality</label>
+                <p>Malaysian</p>
+
+            </div>
+
+            <div>
+
+                <label>Expected Salary</label>
+                <p>RM7,000 - RM9,000</p>
+
+                <label>Notice Period</label>
+                <p>1 Month</p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -18,7 +18,8 @@ from .homepage import router as home_router
 from .job_information import router as job_information_router
 from .job_apply import router as job_apply_router
 from .job_application import router as job_application_router
-
+from .routes.jobSeekerProfile import router as jobSeekerProfile_router
+from .routes.editProfile import router as editProfile_router
 from .routes.employer import router as employer_router
 from .routes.employerApplication import router as employer_application_router
 from .database import db
@@ -111,6 +112,9 @@ app.include_router(employer_router)
 
 app.include_router(employer_application_router)
 
+# Job Seeker Profile
+app.include_router(jobSeekerProfile_router)
+app.include_router(editProfile_router)
 
 # ==============================
 # Page Routes
