@@ -4644,6 +4644,26 @@ cursor:pointer;
 
 }
 
+.btn-login{
+    color:#2F80ED;
+    text-decoration:none;
+    font-weight:600;
+    margin-right:12px;
+}
+
+.btn-signup{
+    background:#2F80ED;
+    color:#fff;
+    text-decoration:none;
+    padding:10px 20px;
+    border-radius:8px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.btn-signup:hover{
+    opacity:.9;
+}
 
 
 @keyframes spin {

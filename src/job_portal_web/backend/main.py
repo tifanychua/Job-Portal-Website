@@ -22,6 +22,8 @@ from .routes.jobSeekerProfile import router as jobSeekerProfile_router
 from .routes.editProfile import router as editProfile_router
 from .routes.employer import router as employer_router
 from .routes.employerApplication import router as employer_application_router
+from .routes.admin import router as admin_router
+from .auth import router as auth_router
 from .database import db
 
 app = FastAPI()
@@ -77,8 +79,11 @@ app.mount("/images", StaticFiles(directory=str(BASE_DIR / "images")), name="imag
 
 # CSS folder
 app.mount("/css", StaticFiles(directory=str(BASE_DIR / "css")), name="css")
-
-
+app.mount(
+    "/js",
+    StaticFiles(directory=str(BASE_DIR / "js")),
+    name="js",
+)
 # ==============================
 # Include Routers
 # ==============================
@@ -115,6 +120,8 @@ app.include_router(employer_application_router)
 # Job Seeker Profile
 app.include_router(jobSeekerProfile_router)
 app.include_router(editProfile_router)
+app.include_router(admin_router)
+app.include_router(auth_router)
 
 # ==============================
 # Page Routes

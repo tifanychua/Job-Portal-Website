@@ -138,3 +138,37 @@ JobConnect Team
     fm = FastMail(conf)
 
     await fm.send_message(message)
+
+
+async def send_password_reset_email(email, name, reset_link):
+    """
+    NEW: sends a password-reset link. Used by backend/auth.py's
+    /forgot-password route. Link expires in 30 minutes (see
+    RESET_TOKEN_TTL_MINUTES in auth.py).
+    """
+
+    message = MessageSchema(
+        subject="Reset Your Password - JobConnect",
+        recipients=[email],
+        body=f"""
+
+Dear {name},
+
+We received a request to reset your JobConnect password.
+
+Click the link below to choose a new password. This link expires in 30 minutes:
+
+{reset_link}
+
+If you did not request this, you can safely ignore this email — your password will not be changed.
+
+Regards,
+JobConnect Team
+
+""",
+        subtype=MessageType.plain,
+    )
+
+    fm = FastMail(conf)
+
+    await fm.send_message(message)
