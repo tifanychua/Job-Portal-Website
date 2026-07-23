@@ -12,6 +12,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from .interview import router as interview_router
 from .applicant import router as applicant_router
 from .chat import router as chat_router
+from .messages import router as messages_router
 
 from .jobs import router as jobs_router
 from .homepage import router as home_router
@@ -110,6 +111,9 @@ app.include_router(job_application_router)
 app.include_router(employer_router)
 
 app.include_router(employer_application_router)
+
+# Messages
+app.include_router(messages_router)
 
 
 # ==============================

@@ -4664,3 +4664,58 @@ cursor:pointer;
     font-weight:500;
 
 }
+
+/* Search Filter Only */
+
+.filter-card{
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:20px;
+
+    margin-bottom:20px;
+
+}
+
+
+
+.filter-section{
+
+    display:flex;
+
+    gap:20px;
+
+}
+
+
+
+.filter-section label{
+
+    font-size:13px;
+
+    font-weight:600;
+
+    display:block;
+
+    margin-bottom:8px;
+
+}
+
+
+
+.filter-section input,
+.filter-section select{
+
+    width:380px;
+
+    height:38px;
+
+    border:1px solid #d1d5db;
+
+    border-radius:8px;
+
+    padding:0 10px;
+
+}
