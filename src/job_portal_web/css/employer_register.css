@@ -41,8 +41,19 @@
   margin-bottom: 24px;
 }
 
-.wizard-art { width: 100%; margin-bottom: 24px; }
-.wizard-art svg { width: 100%; height: auto; }
+.wizard-art {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.wizard-image {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    object-fit: contain;
+}
 
 .wizard-benefits {
   background: var(--color-card-bg);
@@ -215,6 +226,32 @@
   color: var(--color-text); background: transparent; font-family: var(--font-family);
 }
 .form-input-with-icon .toggle-password { color: var(--color-text-secondary); cursor: pointer; font-size: 13px; }
+
+.password-rules {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+}
+
+.password-rules li {
+    color: #dc2626;
+    font-size: 0.85rem;
+    margin: 4px 0;
+    transition: 0.2s ease;
+}
+
+.password-rules li::before {
+    content: "✖ ";
+    font-weight: bold;
+}
+
+.password-rules li.valid {
+    color: #16a34a;
+}
+
+.password-rules li.valid::before {
+    content: "✔ ";
+}
 
 /* Phone with country code */
 .phone-input-group { display: flex; gap: 8px; }

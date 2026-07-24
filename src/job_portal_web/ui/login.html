@@ -28,34 +28,12 @@
     <p>Explore thousands of job opportunities and take the next step in your career journey with us.</p>
 
     <div class="auth-illustration-art">
-      <svg viewBox="0 0 420 320" xmlns="http://www.w3.org/2000/svg">
-        <rect x="60" y="40" width="260" height="180" rx="12" fill="#FFFFFF" stroke="#E2E8F0"/>
-        <circle cx="80" cy="58" r="3" fill="#CBD5E1"/>
-        <circle cx="90" cy="58" r="3" fill="#CBD5E1"/>
-        <circle cx="100" cy="58" r="3" fill="#CBD5E1"/>
-        <rect x="80" y="76" width="220" height="26" rx="13" fill="#F1F5F9"/>
-        <circle cx="270" cy="89" r="9" fill="#2563EB"/>
-        <path d="M266 89h8M270 85v8" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
-        <rect x="80" y="118" width="120" height="14" rx="4" fill="#DBEAFE"/>
-        <rect x="80" y="138" width="180" height="8" rx="4" fill="#EEF2FF"/>
-        <rect x="80" y="152" width="150" height="8" rx="4" fill="#EEF2FF"/>
-        <rect x="80" y="172" width="120" height="14" rx="4" fill="#DBEAFE"/>
-        <rect x="80" y="192" width="180" height="8" rx="4" fill="#EEF2FF"/>
-        <circle cx="335" cy="70" r="16" fill="#FFFFFF" stroke="#2563EB" stroke-width="2"/>
-        <path d="M330 70l3 3 6-6" stroke="#2563EB" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <g transform="translate(90,215)">
-          <rect x="0" y="55" width="70" height="75" rx="14" fill="#1E293B"/>
-          <circle cx="35" cy="30" r="30" fill="#FBCFE8"/>
-          <rect x="10" y="95" width="50" height="35" rx="6" fill="#0F172A"/>
-        </g>
-        <g transform="translate(220,195)">
-          <rect x="0" y="70" width="60" height="90" rx="14" fill="#2563EB"/>
-          <circle cx="30" cy="35" r="32" fill="#FDE68A"/>
-          <circle cx="95" cy="60" r="22" fill="none" stroke="#1E293B" stroke-width="4"/>
-          <line x1="112" y1="77" x2="128" y2="93" stroke="#1E293B" stroke-width="4" stroke-linecap="round"/>
-        </g>
-      </svg>
-    </div>
+    <img
+        src="/image/login.png"
+        alt="JobConnect Login Illustration"
+        class="auth-illustration-image"
+    >
+</div>
 
     <div class="auth-stats-row">
       <div class="auth-stat"><div class="stat-number">10K+</div><div class="stat-label">Jobs Available</div></div>
@@ -74,7 +52,7 @@
       </a>
 
       <div class="auth-title">Welcome Back</div>
-      <div class="auth-subtitle">Log in as {{ role_label }} to continue</div>
+      <div class="auth-subtitle">Log in to continue</div>
 
       {% if error == "invalid_credentials" %}
       <div class="auth-alert auth-alert-error">
@@ -124,9 +102,7 @@
 
         {% if role != "admin" %}
         <div class="auth-row-between">
-          <label class="auth-checkbox">
-            <input type="checkbox" name="remember"> Remember me
-          </label>
+
           <a href="/forgot-password?role={{ role }}" class="auth-link">Forgot password?</a>
         </div>
         {% else %}

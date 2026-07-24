@@ -5,6 +5,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
+from .helper import get_current_user
+
 # ==============================
 # Routers
 # ==============================
@@ -22,9 +24,9 @@ from .routes.jobSeekerProfile import router as jobSeekerProfile_router
 from .routes.editProfile import router as editProfile_router
 from .routes.employer import router as employer_router
 from .routes.employerApplication import router as employer_application_router
-from .routes.admin import router as admin_router
 from .auth import router as auth_router
 from .database import db
+
 
 app = FastAPI()
 
@@ -54,7 +56,7 @@ print("UI PATH:", UI_DIR)
 # ==============================
 
 templates = Jinja2Templates(directory=str(UI_DIR))
-
+templates.env.globals["get_current_user"] = get_current_user
 
 # ==============================
 # Static Files
@@ -120,7 +122,6 @@ app.include_router(employer_application_router)
 # Job Seeker Profile
 app.include_router(jobSeekerProfile_router)
 app.include_router(editProfile_router)
-app.include_router(admin_router)
 app.include_router(auth_router)
 
 # ==============================

@@ -12,8 +12,8 @@
         <a href="/about">About Us</a>
 
         {% if user %}
-        <a href="/my_interviews">Interviews</a>
-        <a href="/messages">Messages</a>
+            <a href="/my_interviews">Interviews</a>
+            <a href="/messages">Messages</a>
         {% endif %}
     </nav>
 
@@ -31,18 +31,22 @@
                 <span class="badge">3</span>
             </div>
 
-            <div class="profile">
-                <img src="/images/{{ user.profileImage or 'user.png' }}" alt="Profile">
-                <div>
+            <a href="/profile" class="profile">
+
+                <img
+                    src="/images/{{ user.profileImage if user.profileImage else 'user.png' }}"
+                    alt="Profile">
+
+                <div class="profile-info">
                     <h4>{{ user.name }}</h4>
                     <small>Job Seeker</small>
                 </div>
-            </div>
+
+            </a>
 
         {% else %}
 
             <a href="/login" class="btn-login">Login</a>
-
             <a href="/register" class="btn-signup">Sign Up</a>
 
         {% endif %}

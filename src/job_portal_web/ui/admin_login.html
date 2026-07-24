@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="/css/base.css">
 <link rel="stylesheet" href="/css/auth.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script type="module" src="/js/admin_login.js"></script>
 
 </head>
 
@@ -16,14 +17,14 @@
 
 <div class="auth-page">
 
-<a href="/" class="auth-brand">
-<i class="fa-solid fa-location-dot"></i>
-Job<span class="brand-connect">Connect</span>
-</a>
 
 
 <div class="auth-card">
 
+<a href="/" class="auth-brand">
+<i class="fa-solid fa-location-dot"></i>
+Job<span class="brand-connect">Connect</span>
+</a>
 
 <div class="auth-title">
 Welcome Back
@@ -52,11 +53,7 @@ Log in as Administrator
 
 
 
-<form method="post" action="/login">
-
-
-<input type="hidden" name="role" value="admin">
-
+<form id="adminLoginForm">
 
 <div class="auth-form-group">
 
@@ -66,16 +63,16 @@ Log in as Administrator
 
 <i class="fa-regular fa-envelope icon"></i>
 
-<input 
+<input
 type="email"
 name="email"
-placeholder="you@example.com"
+id="email"
+placeholder="admin@jobconnect.com"
 required>
 
 </div>
 
 </div>
-
 
 
 <div class="auth-form-group">
@@ -86,41 +83,24 @@ required>
 
 <i class="fa-solid fa-lock icon"></i>
 
-<input 
+<input
 type="password"
-id="password"
 name="password"
-placeholder="Enter your password"
+id="password"
+placeholder="Enter password"
 required>
-
 
 <i class="fa-regular fa-eye toggle-password"
 onclick="togglePassword('password',this)">
 </i>
 
-
 </div>
 
 </div>
 
-
-
-<div class="auth-row-between">
-
-<label class="auth-checkbox">
-<input type="checkbox" name="remember">
-Remember me
-</label>
-
-
-</div>
-
-
-
-<button class="btn-auth-submit text-button">
-Log In
+<button class="btn-auth-submit">
+Administrator Login
 </button>
-
 
 </form>
 
@@ -156,6 +136,8 @@ icon.classList.add("fa-eye");
 }
 
 }
+
+
 
 </script>
 

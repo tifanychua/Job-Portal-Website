@@ -28,34 +28,13 @@
     <h1>Create Your Employer Account</h1>
     <p>Join JobConnect and connect with talented candidates. Post jobs, manage applications, and grow your business.</p>
 
-    <div class="wizard-art">
-      <svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="150" cy="110" r="95" fill="#DBEAFE" opacity="0.6"/>
-        <rect x="105" y="55" width="90" height="130" rx="6" fill="#2563EB"/>
-        <rect x="118" y="70" width="14" height="14" fill="#93C5FD"/>
-        <rect x="143" y="70" width="14" height="14" fill="#93C5FD"/>
-        <rect x="168" y="70" width="14" height="14" fill="#93C5FD"/>
-        <rect x="118" y="94" width="14" height="14" fill="#93C5FD"/>
-        <rect x="143" y="94" width="14" height="14" fill="#93C5FD"/>
-        <rect x="168" y="94" width="14" height="14" fill="#93C5FD"/>
-        <rect x="118" y="118" width="14" height="14" fill="#93C5FD"/>
-        <rect x="143" y="118" width="14" height="14" fill="#93C5FD"/>
-        <rect x="168" y="118" width="14" height="14" fill="#93C5FD"/>
-        <rect x="135" y="150" width="30" height="35" rx="3" fill="#1E293B"/>
-
-        <circle cx="55" cy="55" r="22" fill="#FFFFFF" stroke="#E2E8F0"/>
-        <circle cx="55" cy="55" r="10" fill="#2563EB"/>
-        <circle cx="248" cy="55" r="22" fill="#FFFFFF" stroke="#E2E8F0"/>
-        <rect x="238" y="48" width="20" height="15" rx="2" fill="#2563EB"/>
-        <circle cx="65" cy="170" r="22" fill="#FFFFFF" stroke="#E2E8F0"/>
-        <rect x="55" y="165" width="4" height="12" fill="#2563EB"/>
-        <rect x="63" y="160" width="4" height="17" fill="#2563EB"/>
-        <rect x="71" y="168" width="4" height="9" fill="#2563EB"/>
-
-        <circle cx="205" cy="170" r="18" fill="#22C55E"/>
-        <path d="M198 170l5 5 9-10" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
+   <div class="wizard-art">
+    <img
+        src="/image/employer_register.png"
+        alt="Employer Registration"
+        class="wizard-image"
+    >
+</div>
 
     <div class="wizard-benefits">
       <h4>Why register as an employer?</h4>
@@ -343,7 +322,16 @@
               <input type="password" id="wizardPassword" name="password" placeholder="Enter password" minlength="8" required>
               <i class="fa-regular fa-eye toggle-password" onclick="togglePassword('wizardPassword', this)"></i>
             </div>
-            <div class="form-hint">Password must be at least 8 characters long.</div>
+            <div class="form-hint">
+                Password must contain:
+                <ul class="password-rules">
+                  <li id="rule-length">At least 8 characters</li>
+                  <li id="rule-uppercase">At least one uppercase letter (A–Z)</li>
+                  <li id="rule-lowercase">At least one lowercase letter (a–z)</li>
+                  <li id="rule-number">At least one number (0–9)</li>
+                  <li id="rule-special">At least one special character (!@#$%^&*)</li>
+                </ul>
+              </div>
           </div>
 
           <div class="form-group">
@@ -514,10 +502,38 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  function nextStep() {
+function nextStep() {
+
     if (!validateCurrentStep()) return;
-    goToStep(currentStep + 1);
-  }
+
+    if (currentStep === 3) {
+
+        const password = document.getElementById("wizardPassword").value;
+        const confirmPassword = document.getElementById("wizardConfirmPassword").value;
+
+        const passwordRegex =
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+        if (!passwordRegex.test(password)) {
+            alert(
+                "Password must contain:\n" +
+                "- At least 8 characters\n" +
+                "- At least one uppercase letter\n" +
+                "- At least one lowercase letter\n" +
+                "- At least one number\n" +
+                "- At least one special character"
+            );
+            return; 
+        }
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return; 
+        }
+    }
+    goToStep(currentStep +1);
+    
+}
 
   function prevStep() {
     goToStep(currentStep - 1);

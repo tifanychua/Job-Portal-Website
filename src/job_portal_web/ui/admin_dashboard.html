@@ -17,9 +17,12 @@
     </a>
   </div>
   <div class="navbar-right">
-    <a href="/logout" class="btn btn-outline">Log Out</a>
+    <a href="/login/admin" class="btn btn-outline">Log Out</a>
   </div>
 </nav>
+<h2>Welcome, {{ admin.name }}</h2>
+
+<p>{{ admin.email }}</p>
 
 <div style="max-width:1000px; margin:40px auto; padding:0 24px;">
   <h1 class="text-page-title-alt">Admin Dashboard</h1>

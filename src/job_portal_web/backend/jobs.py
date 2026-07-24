@@ -309,11 +309,25 @@ def browse_jobs(
     topCategories = get_top_categories()
 
     categories = get_categories()
+    
+    user = None
+    
+    if request.session.get("user_type") == "job_seeker":
+
+        uid = request.session.get("applicant_id")
+
+        if uid:
+
+            doc = db.collection("job_seeker").document(uid).get()
+
+            if doc.exists:
+                user = doc.to_dict()
 
     return templates.TemplateResponse(
         request=request,
         name="jobs.html",
         context={
+            "user": user,
             "request": request,
             "jobs": jobs,
             "total_jobs": total_jobs,

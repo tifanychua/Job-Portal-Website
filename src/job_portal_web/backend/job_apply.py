@@ -219,9 +219,22 @@ async def job_apply_submit(
             "updated_on": datetime.now(timezone.utc),
         }
     )
+    user = None
+
+    if request.session.get("user_type") == "job_seeker":
+
+        uid = request.session.get("applicant_id")
+
+        if uid:
+
+            doc = db.collection("job_seeker").document(uid).get()
+
+            if doc.exists:
+                user = doc.to_dict()
 
     return JSONResponse(
         content={
+            "user":user,
             "success": True,
             "message": "Application submitted successfully!",
             "application_id": application_ref.id,

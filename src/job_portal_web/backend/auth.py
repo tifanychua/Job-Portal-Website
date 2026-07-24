@@ -11,7 +11,9 @@ from .database import db
 from firebase_admin import auth, firestore
 from google.cloud.firestore_v1 import SERVER_TIMESTAMP
 from pydantic import BaseModel
-
+from firebase_admin.exceptions import FirebaseError
+from urllib.parse import quote
+from .email_service import send_password_reset_email
 import os
 
 router = APIRouter()
@@ -176,18 +178,6 @@ async def firebase_login(
             "redirect": "/manage-jobs"
         }
 
-    admin = db.collection("admin").document(uid).get()
-
-    if admin.exists:
-
-        request.session["user_type"] = "admin"
-
-        request.session["admin_id"] = uid
-
-        return {
-            "redirect": "/admin/dashboard"
-        }
-
     return JSONResponse(
         {"error": "User not found"},
         status_code=401
@@ -335,7 +325,7 @@ async def firebase_register_employer(
 
             "status": "Pending",
 
-            "createdAt": firestore.SERVER_TIMESTAMP
+            "createdAt": firestore.SERVER_TIMESTAMP,
 
         }
 
@@ -367,11 +357,16 @@ async def firebase_register_employer(
 def forgot_password_page(request: Request):
     sent = request.query_params.get("sent") == "1"
     default_role = request.query_params.get("role", "job_seeker")
+    email = request.query_params.get("email", "")
 
     return templates.TemplateResponse(
         request=request,
         name="forgot_password.html",
-        context={"sent": sent, "default_role": default_role},
+        context={
+            "sent": sent,
+            "default_role": default_role,
+            "email": email,
+        },
     )
 
 
@@ -382,116 +377,48 @@ async def forgot_password_submit(
     email: str = Form(...),
 ):
     if role not in SELF_SERVICE_ROLES:
-        return RedirectResponse(url="/forgot-password?error=invalid_role", status_code=303)
-
-    collection_name = ROLE_COLLECTION[role]
-    user_id, user = _find_user_by_email(collection_name, email)
-
-    # NOTE: we always show the same "check your email" message whether or not
-    # the account exists, so this endpoint can't be used to find out which
-    # emails are registered.
-    if user_id:
-        token = generate_reset_token()
-        expiry = (_now_utc() + timedelta(minutes=RESET_TOKEN_TTL_MINUTES)).isoformat()
-
-        db.collection(collection_name).document(user_id).update(
-            {"resetToken": token, "resetTokenExpiry": expiry}
+        return RedirectResponse(
+            url="/forgot-password?error=invalid_role",
+            status_code=303,
         )
 
-        display_name = user.get("name") or user.get("companyName") or "there"
-        reset_link = str(request.base_url).rstrip("/") + f"/reset-password?role={role}&token={token}"
+    try:
+        reset_link = auth.generate_password_reset_link(email)
 
-        await send_password_reset_email(user.get("email"), display_name, reset_link)
+        display_name = "User"
 
-    return RedirectResponse(url=f"/forgot-password?sent=1&role={role}", status_code=303)
-
-
-# ==============================
-# RESET PASSWORD  (job_seeker / employer only — NOT admin)
-# ==============================
-
-
-@router.get("/reset-password")
-def reset_password_page(request: Request):
-    role = request.query_params.get("role", "")
-    token = request.query_params.get("token", "")
-    error = request.query_params.get("error")
-
-    valid = False
-    if role in SELF_SERVICE_ROLES and token:
         collection_name = ROLE_COLLECTION[role]
-        matches = (
+
+        docs = (
             db.collection(collection_name)
-            .where("resetToken", "==", token)
+            .where("email", "==", email)
             .limit(1)
             .stream()
         )
-        for doc in matches:
+
+        for doc in docs:
             data = doc.to_dict()
-            expiry = data.get("resetTokenExpiry")
-            if expiry and datetime.fromisoformat(expiry) > _now_utc():
-                valid = True
+            display_name = (
+                data.get("name")
+                or data.get("companyName")
+                or "User"
+            )
             break
 
-    return templates.TemplateResponse(
-        request=request,
-        name="reset_password.html",
-        context={"role": role, "token": token, "valid": valid, "error": error},
+        await send_password_reset_email(
+        email=email,
+        name=display_name,
+        reset_link=reset_link,
     )
 
+    except Exception as e:
+        print("Forgot Password Error:", e)
 
-@router.post("/reset-password")
-def reset_password_submit(
-    request: Request,
-    role: str = Form(...),
-    token: str = Form(...),
-    new_password: str = Form(...),
-    confirm_password: str = Form(...),
-):
-    if role not in SELF_SERVICE_ROLES:
-        return RedirectResponse(url="/login?error=invalid_role", status_code=303)
-
-    if new_password != confirm_password:
-        return RedirectResponse(
-            url=f"/reset-password?role={role}&token={token}&error=password_mismatch",
-            status_code=303,
-        )
-
-    if len(new_password) < 8:
-        return RedirectResponse(
-            url=f"/reset-password?role={role}&token={token}&error=password_too_short",
-            status_code=303,
-        )
-
-    collection_name = ROLE_COLLECTION[role]
-
-    matches = (
-        db.collection(collection_name).where("resetToken", "==", token).limit(1).stream()
+    return RedirectResponse(
+        url=f"/forgot-password?sent=1&role={role}&email={quote(email)}",
+        status_code=303,
     )
 
-    user_id = None
-    user = None
-    for doc in matches:
-        user_id = doc.id
-        user = doc.to_dict()
-        break
-
-    if not user_id:
-        return RedirectResponse(url="/forgot-password?error=invalid_token", status_code=303)
-
-    expiry = user.get("resetTokenExpiry")
-    if not expiry or datetime.fromisoformat(expiry) <= _now_utc():
-        return RedirectResponse(url="/forgot-password?error=expired_token", status_code=303)
-
-    db.collection(collection_name).document(user_id).update(
-        {
-            "password": hash_password(new_password),
-            "resetToken": None,
-            "resetTokenExpiry": None,
-        }
-    )
-
-    return RedirectResponse(url="/login?reset=success", status_code=303)
 
 
 # ==============================
@@ -509,48 +436,67 @@ def register_employer_page(request: Request):
         name="employer_registration.html",
         context={"error": error},
     )
-
-
-
-
-
-@router.post("/register/employer/draft")
-async def register_employer_save_draft(request: Request):
-    """
-    Lightweight draft save for the "Save & Continue Later" button.
-    Stores whatever partial data the form has at the time, keyed by
-    account email if provided, otherwise a fresh draft is created each
-    time (good enough for a first pass — swap in a proper draft_id
-    stored in a cookie/localStorage if you want true resume-by-link).
-    """
-    form = await request.form()
-    draft_data = {k: v for k, v in form.multi_items()}
-    draft_data["savedAt"] = _now_utc().isoformat()
-
-    key = form.get("accountEmail") or form.get("businessEmail")
-    doc_ref = (
-        db.collection("company_drafts").document(key)
-        if key
-        else db.collection("company_drafts").document()
+@router.get("/login/admin")
+def register_employer_page(request: Request):
+    error = request.query_params.get("error")
+    return templates.TemplateResponse(
+        request=request,
+        name="admin_login.html",
+        context={"error": error},
     )
-    doc_ref.set(draft_data)
-
-    return {"ok": True}
 
 
-# ==============================
-# NOTE on Admin accounts
-# ==============================
-#
-# Per spec, admin has NO self-registration and NO forgot/reset password —
-# admin accounts must be created directly in Firestore. To create one,
-# run this once from a Python shell in this project (with your venv active):
-#
-#     from job_portal_web.backend.database import db
-#     from job_portal_web.backend.security import hash_password
-#
-#     db.collection("admin").document().set({
-#         "name": "Super Admin",
-#         "email": "admin@jobconnect.com",
-#         "password": hash_password("choose-a-strong-password"),
-#     })
+
+@router.post("/admin/firebase-login")
+async def admin_firebase_login(
+    request: Request,
+    data: LoginToken
+):
+
+    try:
+        decoded = auth.verify_id_token(data.token)
+        uid = decoded["uid"]
+
+    except Exception:
+
+        return JSONResponse(
+            {"error": "Invalid Token"},
+            status_code=401
+        )
+
+    admin = db.collection("admin").document(uid).get()
+
+    if not admin.exists:
+
+        return JSONResponse(
+            {
+                "error": "Access denied."
+            },
+            status_code=403
+        )
+
+    request.session["user_type"] = "admin"
+    request.session["admin_id"] = uid
+
+    return {
+        "redirect": "/admin/dashboard"
+    }
+    
+@router.get("/admin/dashboard")
+def admin_dashboard(request: Request):
+
+    if request.session.get("user_type") != "admin":
+        return RedirectResponse("/login/admin", status_code=303)
+
+    admin_id = request.session.get("admin_id")
+
+    admin_doc = db.collection("admin").document(admin_id).get()
+    admin_data = admin_doc.to_dict() if admin_doc.exists else {}
+
+    return templates.TemplateResponse(
+        request=request,
+        name="admin_dashboard.html",
+        context={
+            "admin": admin_data
+        }
+    )

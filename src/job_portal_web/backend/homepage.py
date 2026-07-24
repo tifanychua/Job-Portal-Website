@@ -89,6 +89,29 @@ def _attach_company_info(job):
 
 @router.get("/")
 def home(request: Request):
+
+    # ===========================
+    # Get Current Logged-in User
+    # ===========================
+
+    user = None
+
+    if request.session.get("user_type") == "job_seeker":
+
+        uid = request.session.get("applicant_id")
+
+        if uid:
+
+            doc = db.collection("job_seeker").document(uid).get()
+
+            if doc.exists:
+
+                user = doc.to_dict()
+
+    # ===========================
+    # Featured Jobs
+    # ===========================
+
     job_docs = (
         db.collection("job_list")
         .where(filter=FieldFilter("status", "==", "Active"))
@@ -109,28 +132,45 @@ def home(request: Request):
 
         jobs.append(job)
 
+    # ===========================
     # Companies
+    # ===========================
 
     companies = []
 
-    docs = db.collection("company").where(filter=FieldFilter("status", "==", "Active")).stream()
+    docs = (
+        db.collection("company")
+        .where(filter=FieldFilter("status", "==", "Active"))
+        .stream()
+    )
 
     for doc in docs:
 
         companies.append(doc.to_dict())
 
-    # Dynamic data
+    # ===========================
+    # Statistics
+    # ===========================
 
     categories = get_top_categories()
 
     total_jobs = len(
-        list(db.collection("job_list").where(filter=FieldFilter("status", "==", "Active")).stream())
+        list(
+            db.collection("job_list")
+            .where(filter=FieldFilter("status", "==", "Active"))
+            .stream()
+        )
     )
+
+    # ===========================
+    # Return Template
+    # ===========================
 
     return templates.TemplateResponse(
         request=request,
         name="home.html",
-        context={
+        context={      
+            "user": user,           
             "featured_jobs": jobs,
             "top_companies": companies[:5],
             "categories": categories,

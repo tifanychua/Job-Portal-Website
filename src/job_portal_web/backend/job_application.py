@@ -148,11 +148,25 @@ def my_applications(request: Request, status: str = "all"):
         application = [a for a in application if a["status"] == status]
 
     total_count = sum(counts.values())
+    
+    user = None
+
+    if request.session.get("user_type") == "job_seeker":
+
+        uid = request.session.get("applicant_id")
+
+        if uid:
+
+            doc = db.collection("job_seeker").document(uid).get()
+
+            if doc.exists:
+                user = doc.to_dict()
 
     return templates.TemplateResponse(
         request=request,
         name="job_application.html",
         context={
+            "user": user,
             "request": request,
             "application": application,
             "counts": counts,
@@ -179,8 +193,21 @@ def my_applications_detail(request: Request, application_id: str):
 
     questions = _get_screening_questions(job)
     current_status = data.get("status", "Submitted")
+    user = None
+
+    if request.session.get("user_type") == "job_seeker":
+
+        uid = request.session.get("applicant_id")
+
+        if uid:
+
+            doc = db.collection("job_seeker").document(uid).get()
+
+            if doc.exists:
+                user = doc.to_dict()
 
     application = {
+        "user":user,
         "id": data["id"],
         "job": job,
         "status": current_status,

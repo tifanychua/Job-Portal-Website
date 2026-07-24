@@ -52,7 +52,21 @@
   color: var(--color-text-secondary);
   margin-top: 2px;
 }
+.auth-illustration-art {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
 
+.auth-illustration-image {
+    width: 100%;
+    max-width:550px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
 /* ---------- Right: form panel ---------- */
 .auth-form-panel {
   flex: 1;
@@ -177,6 +191,32 @@
   color: var(--color-text-secondary);
   font-size: 14px;
   cursor: pointer;
+}
+
+.password-rules {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 8px;
+}
+
+.password-rules li {
+    color: #dc2626;      /* Red */
+    font-size: 0.85rem;
+    margin: 4px 0;
+    transition: all .2s ease;
+}
+
+.password-rules li::before {
+    content: "✖ ";
+    font-weight: bold;
+}
+
+.password-rules li.valid {
+    color: #16a34a;      /* Green */
+}
+
+.password-rules li.valid::before {
+    content: "✔ ";
 }
 
 /* Phone field with country-code prefix */
@@ -414,4 +454,66 @@
     box-shadow:
     0 10px 25px rgba(37,99,235,.15);
 
+}
+
+.auth-page{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px 20px;
+}
+
+.auth-card{
+    width:100%;
+    max-width:440px;
+}
+
+.auth-brand{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    margin-bottom:28px;
+    font-size:26px;
+    font-weight:700;
+}
+
+
+.auth-resend-section{
+    margin:24px 0 16px;
+    text-align:center;
+}
+
+.auth-resend-section form{
+    margin-top:10px;
+}
+
+.auth-resend-section .btn{
+    width:100%;
+}
+
+
+.reset-password-rules{
+    margin-top:12px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.reset-password-rule{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.9rem;
+    color:#9ca3af;
+    transition:0.2s;
+}
+
+.reset-password-rule.valid{
+    color:#16a34a;
+}
+
+.reset-password-rule i{
+    width:16px;
 }
